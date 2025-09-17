@@ -5,7 +5,7 @@ echo Adding all files to git...
 git add .
 
 echo Committing changes...
-git commit -m "Update backend connection settings and deployment scripts"
+git commit -m "Update project files"
 
 echo Pushing to GitHub...
 git push origin main
@@ -21,6 +21,8 @@ if errorlevel 1 (
     echo 2. Select GitHub repository: jinyang756/jucaishengtaiqianduan
     echo 3. Choose team ID: team_j2tTU2rju1M82Tv3r64SmTPa
     echo 4. Confirm build settings and deploy
+    echo 
+    echo 请参考 FINAL_DEPLOYMENT_GUIDE.md 获取详细部署指南
 )
 
 pause
