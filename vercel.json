@@ -17,6 +17,7 @@
     }
   ],
   "env": {
-    "VITE_API_URL": "https://jucaishengtaihouduan.vercel.app/api"
+    "VITE_API_URL": "https://jucaishengtaihouduan.vercel.app/api",
+    "VERCEL_PROJECT_API_KEY": "prj_EWKFUoc5qEzEANrr2kcsMzashsE7"
   }
 }
