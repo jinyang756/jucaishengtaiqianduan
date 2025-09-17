@@ -1,7 +1,7 @@
 // API配置文件
 const API_CONFIG = {
   // 后端API基础地址
-  BASE_URL: import.meta.env.VITE_API_URL || 'https://your-backend.vercel.app/api',
+  BASE_URL: import.meta.env.VITE_API_URL || 'https://jucaishengtaihouduan.vercel.app/api',
   
   // API端点
   ENDPOINTS: {

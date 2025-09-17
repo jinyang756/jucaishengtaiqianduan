@@ -17,6 +17,6 @@
     }
   ],
   "env": {
-    "NEXT_PUBLIC_API_URL": "https://your-backend.vercel.app/api"
+    "VITE_API_URL": "https://jucaishengtaihouduan.vercel.app/api"
   }
 }
