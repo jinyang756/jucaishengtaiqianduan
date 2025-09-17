@@ -9,45 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              primary: '#10B981',
-              'primary-hover': '#059669',
-              success: '#34D399',
-              warning: '#F59E0B',
-              danger: '#EF4444',
-              'neutral-100': '#F9FAFB',
-              'neutral-200': '#F3F4F6',
-              'neutral-700': '#374151',
-              'neutral-800': '#1F2937',
-              'neutral-900': '#111827',
-            },
-          },
-        }
-      }
-    </script>
-    <style type="text/tailwindcss">
-      @tailwind utilities;
-      @layer utilities {
-        .content-auto {
-          content-visibility: auto;
-        }
-        .transition-all-300 {
-          transition: all 0.3s ease;
-        }
-        .hover-lift {
-          transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .hover-lift:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 20px 25px -5px rgba(16, 185, 129, 0.1),
-                      0 10px 10px -5px rgba(16, 185, 129, 0.04);
-        }
-      }
-    </style>
+    <link rel="stylesheet" href="/src/assets/main.css">
   </head>
   <body class="bg-neutral-100 text-neutral-800 min-h-screen flex flex-col">
     <!-- 导航栏 -->
@@ -67,13 +29,30 @@
               <i class="fa fa-bell text-xl"></i>
               <span class="absolute top-0 right-0 h-2 w-2 bg-danger rounded-full"></span>
             </button>
-            <div class="flex items-center space-x-2 cursor-pointer hover-lift">
-              <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center">
-                <i class="fa fa-user"></i>
+            <div class="header-user-info relative flex items-center space-x-2 cursor-pointer hover-lift">
+                <div class="header-user-avatar w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center">
+                  <i class="fa fa-user"></i>
+                </div>
+                <span class="header-user-name font-medium">管理员</span>
+                <i class="fa fa-angle-down text-neutral-700"></i>
+                
+                <!-- 用户下拉菜单 -->
+                <div class="user-dropdown-menu hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-40">
+                  <a href="#profile" class="block px-4 py-2 text-neutral-800 hover:bg-primary/10 hover:text-primary transition-colors">
+                    <i class="fa fa-user-o mr-2"></i>个人资料
+                  </a>
+                  <a href="#settings" class="block px-4 py-2 text-neutral-800 hover:bg-primary/10 hover:text-primary transition-colors">
+                    <i class="fa fa-cog mr-2"></i>账户设置
+                  </a>
+                  <a href="#change-password" class="change-password-btn block px-4 py-2 text-neutral-800 hover:bg-primary/10 hover:text-primary transition-colors">
+                    <i class="fa fa-lock mr-2"></i>修改密码
+                  </a>
+                  <div class="border-t border-gray-200 my-1"></div>
+                  <a href="#logout" class="logout-btn block px-4 py-2 text-danger hover:bg-danger/10 transition-colors">
+                    <i class="fa fa-sign-out mr-2"></i>注销登录
+                  </a>
+                </div>
               </div>
-              <span class="font-medium">管理员</span>
-              <i class="fa fa-angle-down text-neutral-700"></i>
-            </div>
           </div>
         </div>
         <button class="md:hidden text-neutral-800">
@@ -382,6 +361,9 @@
 
     <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="/src/apiConfig.js"></script>
+    <script type="module" src="/src/apiService.js"></script>
+    <script type="module" src="/src/eventHandlers.js"></script>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

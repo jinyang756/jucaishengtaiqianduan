@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>系统设置 - 绿色生态基金管理系统</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/src/assets/main.css">
+  </head>
+  <body class="bg-neutral-100 text-neutral-800 min-h-screen flex flex-col">
+    <!-- 导航栏 -->
+    <header class="bg-white shadow-md z-30">
+      <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <i class="fa fa-leaf text-2xl text-primary"></i>
+          <h1 class="text-xl font-bold text-neutral-900">绿色生态基金管理系统</h1>
+        </div>
+        <div class="hidden md:flex items-center space-x-6">
+          <div class="relative">
+            <input type="text" placeholder="搜索..." class="pl-9 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all-300">
+            <i class="fa fa-search absolute left-3 top-1/2 -translate-y-1/2 text-neutral-700"></i>
+          </div>
+          <div class="flex items-center space-x-4">
+            <button class="relative p-2 text-neutral-700 hover:text-primary transition-all-300">
+              <i class="fa fa-bell text-xl"></i>
+              <span class="absolute top-0 right-0 h-2 w-2 bg-danger rounded-full"></span>
+            </button>
+            <div class="header-user-info relative flex items-center space-x-2 cursor-pointer hover-lift">
+              <div class="header-user-avatar w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center">
+                <i class="fa fa-user"></i>
+              </div>
+              <span class="header-user-name font-medium">管理员</span>
+              <i class="fa fa-angle-down text-neutral-700"></i>
+              
+              <!-- 用户下拉菜单 -->
+              <div class="user-dropdown-menu hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-40">
+                <a href="#profile" class="block px-4 py-2 text-neutral-800 hover:bg-primary/10 hover:text-primary transition-colors">
+                  <i class="fa fa-user-o mr-2"></i>个人资料
+                </a>
+                <a href="#settings" class="block px-4 py-2 text-neutral-800 hover:bg-primary/10 hover:text-primary transition-colors">
+                  <i class="fa fa-cog mr-2"></i>账户设置
+                </a>
+                <a href="#change-password" class="change-password-btn block px-4 py-2 text-neutral-800 hover:bg-primary/10 hover:text-primary transition-colors">
+                  <i class="fa fa-lock mr-2"></i>修改密码
+                </a>
+                <div class="border-t border-gray-200 my-1"></div>
+                <a href="#logout" class="logout-btn block px-4 py-2 text-danger hover:bg-danger/10 transition-colors">
+                  <i class="fa fa-sign-out mr-2"></i>注销登录
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="md:hidden text-neutral-800">
+          <i class="fa fa-bars text-xl"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="flex-1 flex">
+      <!-- 侧边栏 -->
+      <aside id="sidebar" class="w-64 bg-white shadow-md fixed h-[calc(100vh-64px)] left-0 top-[64px] transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out z-20 overflow-y-auto">
+        <nav class="py-4">
+          <ul class="space-y-1">
+            <li>
+              <a href="/index.html" class="flex items-center space-x-3 px-6 py-3 text-neutral-800 hover:bg-neutral-100 rounded-r-full transition-all-300">
+                <i class="fa fa-tachometer text-lg w-6 text-center"></i>
+                <span>仪表板</span>
+              </a>
+            </li>
+            <li>
+              <a href="/fund-management.html" class="flex items-center space-x-3 px-6 py-3 text-neutral-800 hover:bg-neutral-100 rounded-r-full transition-all-300">
+                <i class="fa fa-line-chart text-lg w-6 text-center"></i>
+                <span>基金管理</span>
+              </a>
+            </li>
+            <li>
+              <a href="/investment-analysis.html" class="flex items-center space-x-3 px-6 py-3 text-neutral-800 hover:bg-neutral-100 rounded-r-full transition-all-300">
+                <i class="fa fa-pie-chart text-lg w-6 text-center"></i>
+                <span>投资分析</span>
+              </a>
+            </li>
+            <li>
+              <a href="/transaction-history.html" class="flex items-center space-x-3 px-6 py-3 text-neutral-800 hover:bg-neutral-100 rounded-r-full transition-all-300">
+                <i class="fa fa-exchange text-lg w-6 text-center"></i>
+                <span>交易历史</span>
+              </a>
+            </li>
+            <li>
+              <a href="/user-profile.html" class="flex items-center space-x-3 px-6 py-3 text-neutral-800 hover:bg-neutral-100 rounded-r-full transition-all-300">
+                <i class="fa fa-user text-lg w-6 text-center"></i>
+                <span>个人资料</span>
+              </a>
+            </li>
+            <li>
+              <a href="/system-settings.html" class="flex items-center space-x-3 px-6 py-3 text-primary bg-primary/10 rounded-r-full font-medium">
+                <i class="fa fa-cog text-lg w-6 text-center"></i>
+                <span>系统设置</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- 内容区域 -->
+      <div class="flex-1 md:ml-64 p-6">
+        <div class="container mx-auto">
+          <div class="mb-6">
+            <h2 class="text-2xl font-bold text-neutral-900">系统设置</h2>
+            <p class="text-neutral-700">配置您的系统偏好和账户安全选项</p>
+          </div>
+
+          <!-- 设置导航 -->
+          <div class="bg-white rounded-xl shadow-md p-4 mb-6">
+            <div class="flex flex-wrap space-x-2">
+              <button class="setting-tab px-4 py-2 rounded-lg bg-primary text-white transition-colors" data-tab="account-security">
+                <i class="fa fa-shield mr-2"></i>账户安全
+              </button>
+              <button class="setting-tab px-4 py-2 rounded-lg bg-neutral-200 text-neutral-700 hover:bg-neutral-300 transition-colors" data-tab="notification">
+                <i class="fa fa-bell mr-2"></i>通知设置
+              </button>
+              <button class="setting-tab px-4 py-2 rounded-lg bg-neutral-200 text-neutral-700 hover:bg-neutral-300 transition-colors" data-tab="appearance">
+                <i class="fa fa-paint-brush mr-2"></i>外观设置
+              </button>
+            </div>
+          </div>
+
+          <!-- 设置内容区域 -->
+          <div class="bg-white rounded-xl shadow-md p-6">
+            <!-- 账户安全设置 -->
+            <div id="account-security" class="setting-content block">
+              <h3 class="text-xl font-bold text-neutral-900 mb-6">账户安全</h3>
+              
+              <div class="space-y-8">
+                <!-- 密码修改 -->
+                <div>
+                  <h4 class="text-lg font-medium text-neutral-900 mb-4">修改密码</h4>
+                  <form id="change-password-form" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label for="current-password" class="block text-sm font-medium text-neutral-700 mb-2">当前密码</label>
+                        <input type="password" id="current-password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all-300">
+                      </div>
+                      <div>
+                        <label for="new-password" class="block text-sm font-medium text-neutral-700 mb-2">新密码</label>
+                        <input type="password" id="new-password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all-300">
+                      </div>
+                      <div class="md:col-span-2">
+                        <label for="confirm-password" class="block text-sm font-medium text-neutral-700 mb-2">确认新密码</label>
+                        <input type="password" id="confirm-password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all-300">
+                        <div class="mt-2 text-sm text-neutral-700" id="password-strength"></div>
+                      </div>
+                    </div>
+                    
+                    <div class="pt-4 flex justify-end space-x-4">
+                      <button type="button" class="px-6 py-2 border border-gray-300 text-neutral-700 rounded-lg hover:bg-neutral-100 transition-colors">
+                        取消
+                      </button>
+                      <button type="submit" class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors">
+                        修改密码
+                      </button>
+                    </div>
+                  </form>
+                </div>
+                
+                <!-- 两步验证 -->
+                <div class="border-t border-gray-200 pt-6">
+                  <div class="flex justify-between items-center">
+                    <div>
+                      <h4 class="text-lg font-medium text-neutral-900">两步验证</h4>
+                      <p class="text-neutral-700 text-sm mt-1">开启后，登录时需要额外的验证码验证</p>
+                    </div>
+                    <div class="relative inline-block w-12 h-6">
+                      <input type="checkbox" id="two-factor-auth" class="opacity-0 w-0 h-0">
+                      <span class="absolute cursor-pointer inset-0 bg-neutral-300 rounded-full before:absolute before:content-[''] before:h-5 before:w-5 before:left-0.5 before:bottom-0.5 before:bg-white before:rounded-full before:transition-all"></span>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- 登录设备管理 -->
+                <div class="border-t border-gray-200 pt-6">
+                  <h4 class="text-lg font-medium text-neutral-900 mb-4">登录设备管理</h4>
+                  <div class="space-y-4">
+                    <div class="flex items-center justify-between p-3 bg-neutral-100 rounded-lg">
+                      <div class="flex items-center space-x-3">
+                        <div class="bg-primary/10 p-2 rounded-lg">
+                          <i class="fa fa-desktop text-primary"></i>
+                        </div>
+                        <div>
+                          <p class="font-medium">Windows PC - Chrome</p>
+                          <p class="text-sm text-neutral-700">当前设备 • IP: 192.168.1.1</p>
+                        </div>
+                      </div>
+                      <span class="text-xs bg-success/20 text-success px-2 py-1 rounded">活跃</span>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-neutral-100 rounded-lg">
+                      <div class="flex items-center space-x-3">
+                        <div class="bg-primary/10 p-2 rounded-lg">
+                          <i class="fa fa-mobile text-primary"></i>
+                        </div>
+                        <div>
+                          <p class="font-medium">iPhone - Safari</p>
+                          <p class="text-sm text-neutral-700">上次登录: 昨天 • IP: 10.0.0.1</p>
+                        </div>
+                      </div>
+                      <button class="text-sm text-danger hover:text-danger/80 transition-colors">
+                        下线
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 通知设置 -->
+            <div id="notification" class="setting-content hidden">
+              <h3 class="text-xl font-bold text-neutral-900 mb-6">通知设置</h3>
+              
+              <div class="space-y-6">
+                <div class="flex justify-between items-center p-3 bg-neutral-100 rounded-lg">
+                  <div>
+                    <h4 class="font-medium">基金净值更新通知</h4>
+                    <p class="text-sm text-neutral-700 mt-1">当您关注的基金净值发生变化时通知您</p>
+                  </div>
+                  <div class="relative inline-block w-12 h-6">
+                    <input type="checkbox" id="fund-value-notification" class="opacity-0 w-0 h-0" checked>
+                    <span class="absolute cursor-pointer inset-0 bg-primary rounded-full before:absolute before:content-[''] before:h-5 before:w-5 before:left-0.5 before:bottom-0.5 before:bg-white before:rounded-full before:transition-all before:translate-x-6"></span>
+                  </div>
+                </div>
+                
+                <div class="flex justify-between items-center p-3 bg-neutral-100 rounded-lg">
+                  <div>
+                    <h4 class="font-medium">交易成功通知</h4>
+                    <p class="text-sm text-neutral-700 mt-1">当您的交易成功执行时通知您</p>
+                  </div>
+                  <div class="relative inline-block w-12 h-6">
+                    <input type="checkbox" id="transaction-notification" class="opacity-0 w-0 h-0" checked>
+                    <span class="absolute cursor-pointer inset-0 bg-primary rounded-full before:absolute before:content-[''] before:h-5 before:w-5 before:left-0.5 before:bottom-0.5 before:bg-white before:rounded-full before:transition-all before:translate-x-6"></span>
+                  </div>
+                </div>
+                
+                <div class="flex justify-between items-center p-3 bg-neutral-100 rounded-lg">
+                  <div>
+                    <h4 class="font-medium">市场新闻通知</h4>
+                    <p class="text-sm text-neutral-700 mt-1">当有影响您投资的重要新闻时通知您</p>
+                  </div>
+                  <div class="relative inline-block w-12 h-6">
+                    <input type="checkbox" id="news-notification" class="opacity-0 w-0 h-0">
+                    <span class="absolute cursor-pointer inset-0 bg-neutral-300 rounded-full before:absolute before:content-[''] before:h-5 before:w-5 before:left-0.5 before:bottom-0.5 before:bg-white before:rounded-full before:transition-all"></span>
+                  </div>
+                </div>
+                
+                <div class="flex justify-between items-center p-3 bg-neutral-100 rounded-lg">
+                  <div>
+                    <h4 class="font-medium">系统公告通知</h4>
+                    <p class="text-sm text-neutral-700 mt-1">接收系统更新和维护通知</p>
+                  </div>
+                  <div class="relative inline-block w-12 h-6">
+                    <input type="checkbox" id="system-notification" class="opacity-0 w-0 h-0" checked>
+                    <span class="absolute cursor-pointer inset-0 bg-primary rounded-full before:absolute before:content-[''] before:h-5 before:w-5 before:left-0.5 before:bottom-0.5 before:bg-white before:rounded-full before:transition-all before:translate-x-6"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 外观设置 -->
+            <div id="appearance" class="setting-content hidden">
+              <h3 class="text-xl font-bold text-neutral-900 mb-6">外观设置</h3>
+              
+              <div class="space-y-8">
+                <!-- 主题设置 -->
+                <div>
+                  <h4 class="text-lg font-medium text-neutral-900 mb-4">主题</h4>
+                  <div class="flex flex-wrap gap-4">
+                    <button class="theme-btn w-16 h-16 rounded-lg border-2 border-primary flex flex-col items-center justify-center hover:shadow-md transition-shadow bg-white text-neutral-900" data-theme="light">
+                      <i class="fa fa-sun-o text-2xl mb-1"></i>
+                      <span class="text-xs">亮色</span>
+                    </button>
+                    <button class="theme-btn w-16 h-16 rounded-lg border-2 border-transparent flex flex-col items-center justify-center hover:shadow-md transition-shadow bg-neutral-800 text-white" data-theme="dark">
+                      <i class="fa fa-moon-o text-2xl mb-1"></i>
+                      <span class="text-xs">暗色</span>
+                    </button>
+                    <button class="theme-btn w-16 h-16 rounded-lg border-2 border-transparent flex flex-col items-center justify-center hover:shadow-md transition-shadow bg-gradient-to-br from-neutral-800 to-neutral-600 text-white" data-theme="system">
+                      <i class="fa fa-desktop text-2xl mb-1"></i>
+                      <span class="text-xs">跟随系统</span>
+                    </button>
+                  </div>
+                </div>
+                
+                <!-- 界面布局 -->
+                <div class="border-t border-gray-200 pt-6">
+                  <h4 class="text-lg font-medium text-neutral-900 mb-4">界面布局</h4>
+                  <div class="space-y-4">
+                    <div class="flex items-center space-x-4">
+                      <div class="relative inline-block w-12 h-6">
+                        <input type="checkbox" id="sidebar-collapsible" class="opacity-0 w-0 h-0" checked>
+                        <span class="absolute cursor-pointer inset-0 bg-primary rounded-full before:absolute before:content-[''] before:h-5 before:w-5 before:left-0.5 before:bottom-0.5 before:bg-white before:rounded-full before:transition-all before:translate-x-6"></span>
+                      </div>
+                      <label for="sidebar-collapsible" class="cursor-pointer">可折叠侧边栏</label>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                      <div class="relative inline-block w-12 h-6">
+                        <input type="checkbox" id="compact-mode" class="opacity-0 w-0 h-0">
+                        <span class="absolute cursor-pointer inset-0 bg-neutral-300 rounded-full before:absolute before:content-[''] before:h-5 before:w-5 before:left-0.5 before:bottom-0.5 before:bg-white before:rounded-full before:transition-all"></span>
+                      </div>
+                      <label for="compact-mode" class="cursor-pointer">紧凑模式</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script type="module" src="/src/main.js"></script>
+    <script type="module">
+      import authService from '/src/authService.js';
+      import apiService from '/src/apiService.js';
+      
+      document.addEventListener('DOMContentLoaded', async () => {
+        // 设置标签切换功能
+        const settingTabs = document.querySelectorAll('.setting-tab');
+        const settingContents = document.querySelectorAll('.setting-content');
+        
+        settingTabs.forEach(tab => {
+          tab.addEventListener('click', () => {
+            // 移除所有标签的活跃状态
+            settingTabs.forEach(t => {
+              t.classList.remove('bg-primary', 'text-white');
+              t.classList.add('bg-neutral-200', 'text-neutral-700');
+            });
+            
+            // 添加当前标签的活跃状态
+            tab.classList.remove('bg-neutral-200', 'text-neutral-700');
+            tab.classList.add('bg-primary', 'text-white');
+            
+            // 隐藏所有内容
+            settingContents.forEach(content => {
+              content.classList.add('hidden');
+            });
+            
+            // 显示当前内容
+            const targetContent = document.getElementById(tab.dataset.tab);
+            targetContent.classList.remove('hidden');
+          });
+        });
+        
+        // 密码强度检测
+        const newPasswordInput = document.getElementById('new-password');
+        const passwordStrengthIndicator = document.getElementById('password-strength');
+        
+        if (newPasswordInput && passwordStrengthIndicator) {
+          newPasswordInput.addEventListener('input', () => {
+            const password = newPasswordInput.value;
+            const strength = checkPasswordStrength(password);
+            passwordStrengthIndicator.textContent = strength.text;
+            passwordStrengthIndicator.className = strength.className;
+          });
+        }
+        
+        // 密码修改表单提交
+        const changePasswordForm = document.getElementById('change-password-form');
+        if (changePasswordForm) {
+          changePasswordForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            
+            const currentPassword = document.getElementById('current-password').value;
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            
+            // 表单验证
+            if (!currentPassword || !newPassword || !confirmPassword) {
+              alert('请填写所有密码字段');
+              return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+              alert('新密码和确认密码不匹配');
+              return;
+            }
+            
+            if (newPassword.length < 8) {
+              alert('新密码长度至少为8位');
+              return;
+            }
+            
+            try {
+              // 调用API修改密码
+              await authService.changePassword(currentPassword, newPassword);
+              
+              alert('密码修改成功，请重新登录');
+              await authService.logout();
+              window.location.href = '/login.html';
+            } catch (error) {
+              console.error('修改密码失败:', error);
+              alert('修改密码失败，请稍后重试');
+            }
+          });
+        }
+        
+        // 主题切换
+        const themeButtons = document.querySelectorAll('.theme-btn');
+        themeButtons.forEach(btn => {
+          btn.addEventListener('click', () => {
+            // 移除所有按钮的选中状态
+            themeButtons.forEach(b => {
+              b.classList.remove('border-primary');
+            });
+            
+            // 添加当前按钮的选中状态
+            btn.classList.add('border-primary');
+            
+            // 应用主题（这里只是模拟，实际项目中应该修改CSS变量等）
+            const theme = btn.dataset.theme;
+            console.log('应用主题:', theme);
+            
+            // 保存主题设置到localStorage
+            localStorage.setItem('theme', theme);
+          });
+        });
+        
+        // 切换开关样式
+        const toggleSwitches = document.querySelectorAll('input[type="checkbox"]');
+        toggleSwitches.forEach(toggle => {
+          const span = toggle.nextElementSibling;
+          
+          // 初始化样式
+          if (toggle.checked) {
+            span.classList.add('bg-primary');
+            span.querySelector('before')?.classList.add('translate-x-6');
+          } else {
+            span.classList.add('bg-neutral-300');
+          }
+          
+          // 添加点击事件
+          toggle.addEventListener('change', () => {
+            if (toggle.checked) {
+              span.classList.remove('bg-neutral-300');
+              span.classList.add('bg-primary');
+              span.querySelector('before')?.classList.add('translate-x-6');
+            } else {
+              span.classList.remove('bg-primary');
+              span.classList.add('bg-neutral-300');
+              span.querySelector('before')?.classList.remove('translate-x-6');
+            }
+            
+            // 这里可以根据需要保存设置
+          });
+        });
+      });
+      
+      // 密码强度检测函数
+      function checkPasswordStrength(password) {
+        if (password.length === 0) {
+          return { text: '', className: 'mt-2 text-sm text-neutral-700' };
+        }
+        
+        if (password.length < 8) {
+          return { text: '密码长度至少为8位', className: 'mt-2 text-sm text-danger' };
+        }
+        
+        let score = 0;
+        
+        // 包含小写字母
+        if (/[a-z]/.test(password)) score++;
+        
+        // 包含大写字母
+        if (/[A-Z]/.test(password)) score++;
+        
+        // 包含数字
+        if (/[0-9]/.test(password)) score++;
+        
+        // 包含特殊字符
+        if (/[^a-zA-Z0-9]/.test(password)) score++;
+        
+        if (score <= 2) {
+          return { text: '弱密码', className: 'mt-2 text-sm text-danger' };
+        } else if (score <= 3) {
+          return { text: '中等强度', className: 'mt-2 text-sm text-warning' };
+        } else {
+          return { text: '强密码', className: 'mt-2 text-sm text-success' };
+        }
+      }
+    </script>
+  </body>
+</html>

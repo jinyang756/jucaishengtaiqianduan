@@ -1,5 +1,34 @@
+// 导入事件处理器
+import { initEventHandlers } from './eventHandlers.js';
+import authService from './authService.js';
+
 // 初始化页面
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', async () => {
+  // 检查是否为登录/注册页面
+  const isAuthPage = window.location.pathname.includes('login.html') || window.location.pathname.includes('register.html');
+  
+  if (!isAuthPage) {
+    // 非认证页面，检查用户是否已登录
+    const isLoggedIn = authService.isAuthenticated() && authService.isTokenValid();
+    
+    if (!isLoggedIn) {
+      // 用户未登录，跳转到登录页面
+      window.location.href = '/login.html';
+      return;
+    }
+    
+    try {
+      // 获取当前用户信息
+      const user = await authService.getCurrentUser();
+      if (user) {
+        // 更新页面上的用户信息
+        updateUserInfo(user);
+      }
+    } catch (error) {
+      console.error('获取用户信息失败:', error);
+    }
+  }
+  
   // 初始化图表
   initCharts();
   
@@ -11,7 +40,45 @@ window.addEventListener('DOMContentLoaded', () => {
   
   // 初始化页面动画
   initPageAnimations();
+  
+  // 初始化事件处理器
+  initEventHandlers();
 });
+
+/**
+ * 更新页面上的用户信息
+ * @param {Object} user - 用户信息
+ */
+function updateUserInfo(user) {
+  // 更新顶部导航栏的用户信息
+  const userAvatar = document.querySelector('.header-user-avatar');
+  const userName = document.querySelector('.header-user-name');
+  
+  if (userAvatar && user.name) {
+    // 使用用户名首字母作为头像
+    const initial = user.name.charAt(0).toUpperCase();
+    userAvatar.textContent = initial;
+  }
+  
+  if (userName && user.name) {
+    userName.textContent = user.name;
+  }
+  
+  // 如果需要，可以根据用户角色显示/隐藏特定的菜单项
+  if (user.role) {
+    updateMenuByRole(user.role);
+  }
+}
+
+/**
+ * 根据用户角色更新菜单
+ * @param {string} role - 用户角色
+ */
+function updateMenuByRole(role) {
+  // 根据角色显示或隐藏特定菜单
+  // 这里可以根据实际需求进行扩展
+  console.log('用户角色:', role);
+}
 
 // 初始化图表
 function initCharts() {

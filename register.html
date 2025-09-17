@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>注册 - 绿色生态基金管理系统</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/src/assets/main.css">
+  </head>
+  <body class="bg-neutral-100 min-h-screen flex flex-col">
+    <div class="flex flex-col md:flex-row min-h-screen">
+      <!-- 左侧背景 -->
+      <div class="hidden md:flex md:w-1/2 register-bg-gradient items-center justify-center p-8">
+        <div class="text-center text-white max-w-md">
+          <div class="flex justify-center mb-6">
+            <i class="fa fa-leaf text-6xl text-white/90"></i>
+          </div>
+          <h1 class="text-4xl font-bold mb-4">加入绿色生态基金</h1>
+          <p class="text-lg text-white/80 mb-6">
+            成为绿色金融投资的一员，为可持续发展贡献力量
+          </p>
+          <div class="flex flex-wrap justify-center gap-4 text-white/90">
+            <div class="flex items-center">
+              <i class="fa fa-users mr-2"></i>
+              <span>5000+ 投资者</span>
+            </div>
+            <div class="flex items-center">
+              <i class="fa fa-certificate mr-2"></i>
+              <span>安全认证</span>
+            </div>
+            <div class="flex items-center">
+              <i class="fa fa-line-chart mr-2"></i>
+              <span>稳定收益</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 右侧注册表单 -->
+      <div class="flex w-full md:w-1/2 items-center justify-center p-6">
+        <div class="w-full max-w-md">
+          <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-neutral-900 mb-2">创建账户</h2>
+            <p class="text-neutral-700">加入我们，开启绿色投资之旅</p>
+          </div>
+          
+          <!-- 注册表单 -->
+          <form id="registerForm" class="space-y-4">
+            <!-- 用户名 -->
+            <div>
+              <label for="username" class="block text-sm font-medium text-neutral-700 mb-1">用户名</label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <i class="fa fa-user text-neutral-500"></i>
+                </div>
+                <input 
+                  type="text" 
+                  id="username" 
+                  name="username" 
+                  class="w-full pl-10 pr-3 py-3 border border-neutral-300 rounded-lg shadow-sm form-input-focus transition-all-300"
+                  placeholder="请设置用户名"
+                  required
+                />
+              </div>
+            </div>
+            
+            <!-- 邮箱 -->
+            <div>
+              <label for="email" class="block text-sm font-medium text-neutral-700 mb-1">邮箱</label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <i class="fa fa-envelope text-neutral-500"></i>
+                </div>
+                <input 
+                  type="email" 
+                  id="email" 
+                  name="email" 
+                  class="w-full pl-10 pr-3 py-3 border border-neutral-300 rounded-lg shadow-sm form-input-focus transition-all-300"
+                  placeholder="请输入邮箱"
+                  required
+                />
+              </div>
+            </div>
+            
+            <!-- 密码 -->
+            <div>
+              <label for="password" class="block text-sm font-medium text-neutral-700 mb-1">密码</label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <i class="fa fa-lock text-neutral-500"></i>
+                </div>
+                <input 
+                  type="password" 
+                  id="password" 
+                  name="password" 
+                  class="w-full pl-10 pr-3 py-3 border border-neutral-300 rounded-lg shadow-sm form-input-focus transition-all-300"
+                  placeholder="请设置密码（至少8位，包含字母和数字）"
+                  required
+                  minlength="8"
+                />
+                <button 
+                  type="button" 
+                  id="togglePassword" 
+                  class="absolute inset-y-0 right-0 pr-3 flex items-center text-neutral-500 hover:text-neutral-700 transition-all-300"
+                >
+                  <i class="fa fa-eye"></i>
+                </button>
+              </div>
+              <p id="passwordStrength" class="mt-1 text-xs text-neutral-500">密码强度: 未输入</p>
+            </div>
+            
+            <!-- 确认密码 -->
+            <div>
+              <label for="confirmPassword" class="block text-sm font-medium text-neutral-700 mb-1">确认密码</label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <i class="fa fa-lock text-neutral-500"></i>
+                </div>
+                <input 
+                  type="password" 
+                  id="confirmPassword" 
+                  name="confirmPassword" 
+                  class="w-full pl-10 pr-3 py-3 border border-neutral-300 rounded-lg shadow-sm form-input-focus transition-all-300"
+                  placeholder="请再次输入密码"
+                  required
+                />
+              </div>
+              <p id="passwordMatch" class="mt-1 text-xs text-neutral-500 hidden">密码不匹配</p>
+            </div>
+            
+            <!-- 错误提示 -->
+            <div id="errorMessage" class="hidden p-3 bg-danger/10 text-danger rounded-lg text-sm"></div>
+            
+            <!-- 注册按钮 -->
+            <button 
+              type="submit" 
+              class="w-full py-3 px-4 bg-primary text-white font-medium rounded-lg hover:bg-primary-hover focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 transition-all-300"
+            >
+              注册
+            </button>
+          </form>
+          
+          <!-- 登录链接 -->
+          <div class="mt-6 text-center">
+            <p class="text-neutral-700">
+              已有账户? <a href="login.html" class="font-medium text-primary hover:text-primary-hover transition-all-300">立即登录</a>
+            </p>
+          </div>
+          
+          <!-- 服务条款 -->
+          <div class="mt-4 text-center text-sm text-neutral-500">
+            <p>点击注册，即表示您同意我们的<a href="#" class="text-primary hover:text-primary-hover">服务条款</a>和<a href="#" class="text-primary hover:text-primary-hover">隐私政策</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 注册脚本 -->
+    <script type="module">
+      import authService from './src/authService.js';
+      
+      document.addEventListener('DOMContentLoaded', () => {
+        const registerForm = document.getElementById('registerForm');
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const passwordStrength = document.getElementById('passwordStrength');
+        const passwordMatch = document.getElementById('passwordMatch');
+        const errorMessage = document.getElementById('errorMessage');
+        
+        // 切换密码可见性
+        togglePassword.addEventListener('click', () => {
+          const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+          passwordInput.setAttribute('type', type);
+          togglePassword.innerHTML = type === 'password' ? '<i class="fa fa-eye"></i>' : '<i class="fa fa-eye-slash"></i>';
+        });
+        
+        // 密码强度检查
+        passwordInput.addEventListener('input', () => {
+          const password = passwordInput.value;
+          let strength = '弱';
+          let color = 'text-danger';
+          
+          if (password.length >= 8) {
+            if (/[A-Za-z]/.test(password) && /[0-9]/.test(password)) {
+              strength = '中';
+              color = 'text-warning';
+              
+              if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+                strength = '强';
+                color = 'text-success';
+              }
+            }
+          }
+          
+          passwordStrength.textContent = `密码强度: ${strength}`;
+          passwordStrength.className = `mt-1 text-xs ${color}`;
+          
+          // 检查密码是否匹配
+          checkPasswordMatch();
+        });
+        
+        // 确认密码检查
+        confirmPasswordInput.addEventListener('input', checkPasswordMatch);
+        
+        function checkPasswordMatch() {
+          const password = passwordInput.value;
+          const confirmPassword = confirmPasswordInput.value;
+          
+          if (confirmPassword && password !== confirmPassword) {
+            passwordMatch.classList.remove('hidden');
+          } else {
+            passwordMatch.classList.add('hidden');
+          }
+        }
+        
+        // 注册表单提交
+        registerForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          
+          const username = document.getElementById('username').value;
+          const email = document.getElementById('email').value;
+          const password = document.getElementById('password').value;
+          const confirmPassword = document.getElementById('confirmPassword').value;
+          
+          // 隐藏之前的错误信息
+          errorMessage.classList.add('hidden');
+          
+          // 前端验证
+          if (password !== confirmPassword) {
+            errorMessage.textContent = '两次输入的密码不匹配';
+            errorMessage.classList.remove('hidden');
+            return;
+          }
+          
+          if (password.length < 8 || !(/[A-Za-z]/.test(password) && /[0-9]/.test(password))) {
+            errorMessage.textContent = '密码必须至少8位，并包含字母和数字';
+            errorMessage.classList.remove('hidden');
+            return;
+          }
+          
+          try {
+            // 显示加载状态
+            const submitButton = registerForm.querySelector('button[type="submit"]');
+            const originalText = submitButton.innerHTML;
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> 注册中...';
+            
+            // 调用注册服务
+            await authService.register({
+              username,
+              email,
+              password
+            });
+            
+            // 注册成功，跳转到登录页面
+            alert('注册成功，请登录！');
+            window.location.href = '/login.html';
+          } catch (error) {
+            // 显示错误信息
+            errorMessage.textContent = error.message || '注册失败，请稍后重试';
+            errorMessage.classList.remove('hidden');
+          } finally {
+            // 恢复按钮状态
+            const submitButton = registerForm.querySelector('button[type="submit"]');
+            submitButton.disabled = false;
+            submitButton.innerHTML = '注册';
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

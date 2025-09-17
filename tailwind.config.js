@@ -2,6 +2,10 @@
 export default {
   content: [
     './index.html',
+    './login.html',
+    './register.html',
+    './user-profile.html',
+    './system-settings.html',
     './src/**/*.{js,jsx,ts,tsx,vue,html,css}',
   ],
   theme: {

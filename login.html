@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>登录 - 绿色生态基金管理系统</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/src/assets/main.css">
+  </head>
+  <body class="bg-neutral-100 min-h-screen flex flex-col">
+    <div class="flex flex-col md:flex-row min-h-screen">
+      <!-- 左侧背景 -->
+      <div class="hidden md:flex md:w-1/2 login-bg-gradient items-center justify-center p-8">
+        <div class="text-center text-white max-w-md">
+          <div class="flex justify-center mb-6">
+            <i class="fa fa-leaf text-6xl text-white/90"></i>
+          </div>
+          <h1 class="text-4xl font-bold mb-4">绿色生态基金管理系统</h1>
+          <p class="text-lg text-white/80 mb-6">
+            专业的绿色金融投资管理平台，为您提供可持续发展的投资机会
+          </p>
+          <div class="flex flex-wrap justify-center gap-4 text-white/90">
+            <div class="flex items-center">
+              <i class="fa fa-line-chart mr-2"></i>
+              <span>实时数据分析</span>
+            </div>
+            <div class="flex items-center">
+              <i class="fa fa-shield mr-2"></i>
+              <span>安全可靠</span>
+            </div>
+            <div class="flex items-center">
+              <i class="fa fa-cogs mr-2"></i>
+              <span>智能推荐</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 右侧登录表单 -->
+      <div class="flex w-full md:w-1/2 items-center justify-center p-6">
+        <div class="w-full max-w-md">
+          <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-neutral-900 mb-2">欢迎回来</h2>
+            <p class="text-neutral-700">请登录您的账户继续访问</p>
+          </div>
+          
+          <!-- 登录表单 -->
+          <form id="loginForm" class="space-y-4">
+            <!-- 用户名/邮箱 -->
+            <div>
+              <label for="username" class="block text-sm font-medium text-neutral-700 mb-1">用户名/邮箱</label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <i class="fa fa-user text-neutral-500"></i>
+                </div>
+                <input 
+                  type="text" 
+                  id="username" 
+                  name="username" 
+                  class="w-full pl-10 pr-3 py-3 border border-neutral-300 rounded-lg shadow-sm form-input-focus transition-all-300"
+                  placeholder="请输入用户名或邮箱"
+                  required
+                />
+              </div>
+            </div>
+            
+            <!-- 密码 -->
+            <div>
+              <label for="password" class="block text-sm font-medium text-neutral-700 mb-1">密码</label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <i class="fa fa-lock text-neutral-500"></i>
+                </div>
+                <input 
+                  type="password" 
+                  id="password" 
+                  name="password" 
+                  class="w-full pl-10 pr-3 py-3 border border-neutral-300 rounded-lg shadow-sm form-input-focus transition-all-300"
+                  placeholder="请输入密码"
+                  required
+                />
+                <button 
+                  type="button" 
+                  id="togglePassword" 
+                  class="absolute inset-y-0 right-0 pr-3 flex items-center text-neutral-500 hover:text-neutral-700 transition-all-300"
+                >
+                  <i class="fa fa-eye"></i>
+                </button>
+              </div>
+            </div>
+            
+            <!-- 记住我和忘记密码 -->
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <input 
+                  type="checkbox" 
+                  id="rememberMe" 
+                  name="rememberMe" 
+                  class="h-4 w-4 text-primary border-neutral-300 rounded focus:ring-primary"
+                />
+                <label for="rememberMe" class="ml-2 block text-sm text-neutral-700">记住我</label>
+              </div>
+              <a href="#" class="text-sm font-medium text-primary hover:text-primary-hover transition-all-300">
+                忘记密码?
+              </a>
+            </div>
+            
+            <!-- 错误提示 -->
+            <div id="errorMessage" class="hidden p-3 bg-danger/10 text-danger rounded-lg text-sm"></div>
+            
+            <!-- 登录按钮 -->
+            <button 
+              type="submit" 
+              class="w-full py-3 px-4 bg-primary text-white font-medium rounded-lg hover:bg-primary-hover focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 transition-all-300"
+            >
+              登录
+            </button>
+          </form>
+          
+          <!-- 注册链接 -->
+          <div class="mt-6 text-center">
+            <p class="text-neutral-700">
+              还没有账户? <a href="register.html" class="font-medium text-primary hover:text-primary-hover transition-all-300">立即注册</a>
+            </p>
+          </div>
+          
+          <!-- 分隔线 -->
+          <div class="relative my-8">
+            <div class="absolute inset-0 flex items-center">
+              <div class="w-full border-t border-neutral-300"></div>
+            </div>
+            <div class="relative flex justify-center text-sm">
+              <span class="px-2 bg-neutral-100 text-neutral-500">或者使用以下方式登录</span>
+            </div>
+          </div>
+          
+          <!-- 第三方登录 -->
+          <div class="flex justify-center space-x-4">
+            <button class="p-3 border border-neutral-300 rounded-full text-neutral-700 hover:bg-neutral-100 transition-all-300">
+              <i class="fa fa-weixin text-lg"></i>
+            </button>
+            <button class="p-3 border border-neutral-300 rounded-full text-neutral-700 hover:bg-neutral-100 transition-all-300">
+              <i class="fa fa-qq text-lg"></i>
+            </button>
+            <button class="p-3 border border-neutral-300 rounded-full text-neutral-700 hover:bg-neutral-100 transition-all-300">
+              <i class="fa fa-alipay text-lg"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 登录脚本 -->
+    <script type="module">
+      import authService from './src/authService.js';
+      
+      document.addEventListener('DOMContentLoaded', () => {
+        const loginForm = document.getElementById('loginForm');
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+        const errorMessage = document.getElementById('errorMessage');
+        
+        // 切换密码可见性
+        togglePassword.addEventListener('click', () => {
+          const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+          passwordInput.setAttribute('type', type);
+          togglePassword.innerHTML = type === 'password' ? '<i class="fa fa-eye"></i>' : '<i class="fa fa-eye-slash"></i>';
+        });
+        
+        // 登录表单提交
+        loginForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          
+          const username = document.getElementById('username').value;
+          const password = document.getElementById('password').value;
+          const rememberMe = document.getElementById('rememberMe').checked;
+          
+          // 隐藏之前的错误信息
+          errorMessage.classList.add('hidden');
+          
+          try {
+            // 显示加载状态
+            const submitButton = loginForm.querySelector('button[type="submit"]');
+            const originalText = submitButton.innerHTML;
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> 登录中...';
+            
+            // 调用登录服务
+            await authService.login({
+              username,
+              password,
+              rememberMe
+            });
+            
+            // 登录成功，重定向到首页
+            window.location.href = '/index.html';
+          } catch (error) {
+            // 显示错误信息
+            errorMessage.textContent = error.message || '登录失败，请检查您的用户名和密码';
+            errorMessage.classList.remove('hidden');
+          } finally {
+            // 恢复按钮状态
+            const submitButton = loginForm.querySelector('button[type="submit"]');
+            submitButton.disabled = false;
+            submitButton.innerHTML = '登录';
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
