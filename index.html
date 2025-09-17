@@ -14,6 +14,22 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/src/assets/main.css">
+    
+    <!-- 配置Tailwind自定义颜色 -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: '#10B981', // 绿色作为主色调
+              secondary: '#3B82F6',
+              danger: '#EF4444',
+              success: '#10B981'
+            },
+          },
+        }
+      }
+    </script>
   </head>
   <body class="bg-neutral-100 text-neutral-800 min-h-screen flex flex-col">
     <!-- 导航栏 -->
@@ -39,7 +55,7 @@
                 </div>
                 <span class="header-user-name font-medium">管理员</span>
                 <i class="fa fa-angle-down text-neutral-700"></i>
-                
+                </div>
                 <!-- 用户下拉菜单 -->
                 <div class="user-dropdown-menu hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-40">
                   <a href="#profile" class="block px-4 py-2 text-neutral-800 hover:bg-primary/10 hover:text-primary transition-colors">
@@ -47,6 +63,10 @@
                   </a>
                   <a href="#settings" class="block px-4 py-2 text-neutral-800 hover:bg-primary/10 hover:text-primary transition-colors">
                     <i class="fa fa-cog mr-2"></i>账户设置
+                  </a>
+                  <div class="border-t border-gray-200 my-1"></div>
+                  <a href="#test-api" id="test-api-connection" class="block px-4 py-2 text-neutral-800 hover:bg-primary/10 hover:text-primary transition-colors">
+                    <i class="fa fa-plug mr-2"></i>测试API连接
                   </a>
                   <a href="#change-password" class="change-password-btn block px-4 py-2 text-neutral-800 hover:bg-primary/10 hover:text-primary transition-colors">
                     <i class="fa fa-lock mr-2"></i>修改密码
@@ -369,5 +389,35 @@
     <script type="module" src="/src/apiService.js"></script>
     <script type="module" src="/src/eventHandlers.js"></script>
     <script type="module" src="/src/main.js"></script>
+    
+    <!-- API连接测试脚本 -->
+    <script type="module">
+      import { testApiConnection } from '/src/apiConnectionTest.js';
+      
+      // 为测试按钮添加点击事件
+      document.addEventListener('DOMContentLoaded', () => {
+        const testButton = document.getElementById('test-api-connection');
+        if (testButton) {
+          testButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // 显示测试提示
+            alert('API连接测试已开始，请查看浏览器控制台以获取详细结果。\n(按F12或右键->检查打开控制台)');
+            
+            // 运行测试
+            testApiConnection();
+          });
+        }
+        
+        // 也可以通过URL参数自动运行测试
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('test-api')) {
+          setTimeout(() => {
+            testApiConnection();
+          }, 1000);
+        }
+      });
+    </script>
   </body>
 </html>
