@@ -393,9 +393,12 @@
     <!-- API连接测试脚本 -->
     <script type="module">
       import { testApiConnection } from '/src/apiConnectionTest.js';
+      import responsiveTester from '/src/responsiveTest.js';
+      import i18n from '/src/i18n.js';
       
       // 为测试按钮添加点击事件
       document.addEventListener('DOMContentLoaded', () => {
+        // API连接测试
         const testButton = document.getElementById('test-api-connection');
         if (testButton) {
           testButton.addEventListener('click', (e) => {
@@ -410,11 +413,29 @@
           });
         }
         
-        // 也可以通过URL参数自动运行测试
+        // 响应式布局测试
+        responsiveTester.addTestButton();
+        
+        // 初始化国际化
+        if (i18n && typeof i18n.init === 'function') {
+          i18n.init().then(() => {
+            console.log('国际化初始化完成');
+          }).catch(err => {
+            console.error('国际化初始化失败:', err);
+          });
+        }
+        
+        // URL参数自动运行测试
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has('test-api')) {
           setTimeout(() => {
             testApiConnection();
+          }, 1000);
+        }
+        
+        if (urlParams.has('test-responsive')) {
+          setTimeout(() => {
+            responsiveTester.runTests();
           }, 1000);
         }
       });
