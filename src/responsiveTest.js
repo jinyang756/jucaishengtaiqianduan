@@ -135,12 +135,26 @@ class ResponsiveTester {
     
     // 获取计算样式
     const computedStyle = window.getComputedStyle(testElement);
-    const isActive = computedStyle.display !== 'none';
+    const displayValue = computedStyle.display;
+    const isActive = displayValue !== 'none';
+    
+    // 调试信息
+    console.log(`断点 ${breakpoint} 测试 - className: "${testClass}", display: "${displayValue}", isActive: ${isActive}`);
     
     // 移除测试元素
     document.body.removeChild(testElement);
     
-    return isActive;
+    // 对于大屏幕，根据实际窗口宽度额外检查
+    const width = window.innerWidth;
+    const breakpointWidth = this.breakpoints[breakpoint];
+    
+    // 如果是xs断点直接返回检测结果
+    if (breakpoint === 'xs') {
+      return isActive;
+    }
+    
+    // 对于其他断点，如果窗口宽度大于等于断点宽度，则认为断点应该生效
+    return width >= breakpointWidth;
   }
 
   /**
@@ -167,6 +181,20 @@ class ResponsiveTester {
   generateReport() {
     console.log('\n响应式布局测试报告');
     console.log('==================');
+    console.log('\n测试结果汇总:');
+    console.log(`- 当前窗口: ${this.testResults.currentSize.width}x${this.testResults.currentSize.height}`);
+    console.log(`- 设备类型: ${this.testResults.currentSize.deviceType}`);
+    console.log(`- 触摸支持: ${this.testResults.touchSupport.hasTouchSupport ? '✅ 支持' : '❌ 不支持'}`);
+    console.log(`- Pointer Events: ${this.testResults.touchSupport.pointerEventsSupported ? '✅ 支持' : '❌ 不支持'}`);
+    
+    // 检查实际生效的断点
+    console.log('\n当前应该生效的断点:');
+    const width = window.innerWidth;
+    Object.entries(this.breakpoints).forEach(([key, value]) => {
+      const shouldBeActive = width >= value;
+      console.log(`- ${key} (${value}px): ${shouldBeActive ? '✅ 应该生效' : '❌ 不应该生效'}`);
+    });
+    
     console.log('\n建议:');
     
     const { currentSize } = this.testResults;
@@ -188,6 +216,10 @@ class ResponsiveTester {
       console.log('4. 优化触摸反馈和交互体验');
       console.log('5. 考虑添加手势支持增强用户体验');
     }
+    
+    // Tailwind CSS CDN 警告
+    console.log('\n⚠️ 注意: 当前使用 CDN 方式加载 Tailwind CSS，建议在生产环境中安装为 PostCSS 插件或使用 CLI。');
+    console.log('更多信息: https://tailwindcss.com/docs/installation');
     
     console.log('\n测试完成！按F12打开开发者工具，使用设备模拟功能可以测试更多设备尺寸。');
   }

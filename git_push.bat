@@ -1,5 +1,5 @@
 @echo off
-REM 修复版：提交并推送所有更改到GitHub
+REM 完善版：提交并推送所有更改到GitHub
 
 REM 检查Git是否可用
 where git >nul 2>nul
@@ -13,7 +13,7 @@ REM 设置中文显示
 chcp 65001 >nul
 
 REM 添加所有文件到git
- echo 正在添加所有文件到Git...
+echo 正在添加所有文件到Git...
 git add .
 if %errorlevel% neq 0 (
     echo 错误：添加文件失败！
@@ -23,10 +23,10 @@ if %errorlevel% neq 0 (
 
 REM 提交更改
 set /p commit_msg=请输入提交信息（默认为"Update project files"）：
-if "%commit_msg%"=="" set commit_msg="Update project files"
+if "%commit_msg%"=="" set commit_msg=Update project files
 
 echo 正在提交更改...
-git commit -m %commit_msg%
+git commit -m "%commit_msg%"
 if %errorlevel% neq 0 (
     echo 错误：提交失败！请检查是否有冲突或未解决的问题。
     pause
@@ -42,15 +42,13 @@ if %errorlevel% neq 0 (
     echo 您可以尝试使用以下命令手动设置远程仓库：
     echo git remote add origin https://github.com/jinyang756/jucaishengtaiqianduan.git
     echo 或者使用Git GUI或其他工具手动提交和推送。
+    pause
+    exit /b 1
 ) else (
     echo 成功将更改推送到GitHub！
     echo 现在您可以通过GitHub集成部署到Vercel：
     echo 1. 访问 https://vercel.com/new
     echo 2. 选择GitHub仓库：jinyang756/jucaishengtaiqianduan
     echo 3. 选择团队ID：team_j2tTU2rju1M82Tv3r64SmTPa
-    echo 4. 确认构建设置并部署
-    echo 
-    echo 请参考 FINAL_DEPLOYMENT_GUIDE.md 获取详细部署指南
+    pause
 )
-
-pause

@@ -1,6 +1,7 @@
 // 导入事件处理器
 import { initEventHandlers } from './eventHandlers.js';
 import authService from './authService.js';
+import { mockData } from './mockData/index.js';
 
 // 初始化页面
 window.addEventListener('DOMContentLoaded', async () => {
@@ -91,27 +92,26 @@ function initCharts() {
 
 // 初始化净值趋势图
 function initNetValueChart() {
-  const ctx = document.getElementById('netValueChart').getContext('2d');
+  const chartElement = document.getElementById('netValueChart');
+  if (!chartElement) return; // 如果元素不存在，直接返回
+  
+  const ctx = chartElement.getContext('2d');
+  
+  // 从模拟数据中获取基金数据
+  const fundData = mockData.funds.slice(0, 3).map(fund => ({
+    label: fund.name,
+    data: generateRandomValues(6, parseFloat(fund.nav), 0.005),
+    borderColor: fund.color || getRandomColor(),
+    backgroundColor: `${fund.color || getRandomColor()}20`,
+    tension: 0.4,
+    fill: Math.random() > 0.5
+  }));
   
   window.netValueChart = new Chart(ctx, {
     type: 'line',
     data: {
       labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'],
-      datasets: [{
-        label: '环保新能源基金',
-        data: [1.082, 1.083, 1.085, 1.087, 1.089, 1.088],
-        borderColor: '#10B981',
-        backgroundColor: 'rgba(16, 185, 129, 0.1)',
-        tension: 0.4,
-        fill: true
-      }, {
-        label: '绿色科技创新基金',
-        data: [1.250, 1.252, 1.256, 1.258, 1.255, 1.254],
-        borderColor: '#059669',
-        backgroundColor: 'rgba(5, 150, 105, 0.05)',
-        tension: 0.4,
-        fill: false
-      }]
+      datasets: fundData
     },
     options: {
       responsive: true,
@@ -140,7 +140,10 @@ function initNetValueChart() {
 
 // 初始化收益率分布图
 function initReturnRateChart() {
-  const ctx = document.getElementById('returnRateChart').getContext('2d');
+  const chartElement = document.getElementById('returnRateChart');
+  if (!chartElement) return; // 如果元素不存在，直接返回
+  
+  const ctx = chartElement.getContext('2d');
   
   window.returnRateChart = new Chart(ctx, {
     type: 'doughnut',
@@ -229,6 +232,20 @@ function updateLastUpdateTime() {
   }
 }
 
+// 生成基于基础值的随机值数组
+function generateRandomValues(count, baseValue, variation) {
+  return Array.from({ length: count }, () => {
+    const randomChange = (Math.random() - 0.5) * variation;
+    return (baseValue + randomChange).toFixed(3);
+  });
+}
+
+// 生成随机颜色
+function getRandomColor() {
+  const colors = ['#10B981', '#059669', '#047857', '#6366F1', '#8B5CF6', '#EC4899', '#F43F5E', '#EF4444'];
+  return colors[Math.floor(Math.random() * colors.length)];
+}
+
 // 更新基金净值
 function updateFundValues() {
   // 获取表格中的所有基金行
@@ -264,12 +281,11 @@ function updateFundValues() {
 // 更新图表数据
 function updateCharts() {
   if (window.netValueChart) {
-    // 更新净值趋势图的数据
-    window.netValueChart.data.datasets.forEach(dataset => {
-      dataset.data = dataset.data.map(value => {
-        const randomChange = (Math.random() - 0.45) * 0.001;
-        return (parseFloat(value) + randomChange).toFixed(3);
-      });
+    // 使用模拟数据更新净值趋势图
+    mockData.funds.slice(0, 3).forEach((fund, index) => {
+      if (window.netValueChart.data.datasets[index]) {
+        window.netValueChart.data.datasets[index].data = generateRandomValues(6, parseFloat(fund.nav), 0.005);
+      }
     });
     
     window.netValueChart.update();

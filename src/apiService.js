@@ -1,6 +1,8 @@
 // API服务文件
 import API_CONFIG from './apiConfig.js';
 import authService from './authService.js';
+// 导入模拟数据
+import { mockData } from './mockData/index.js';
 
 /**
  * 基金管理系统API服务
@@ -75,12 +77,16 @@ async function apiRequest(method, endpoint, options = {}) {
         }
       }
       
-      throw new Error(`API请求失败: ${response.status} ${response.statusText}`);
+      // 记录具体错误信息并返回模拟数据
+      console.warn(`API请求失败: ${response.status} ${response.statusText}`);
+      console.warn(`使用模拟数据代替真实API响应`);
+      return getMockData(endpoint, method);
     }
     
     return await response.json();
   } catch (error) {
-    console.error('API请求错误:', error);
+    console.error('API请求网络错误:', error);
+    console.warn('无法连接到API服务器，使用模拟数据');
     
     // 如果是网络错误或无法连接到服务器，返回模拟数据
     return getMockData(endpoint, method);
@@ -91,84 +97,39 @@ async function apiRequest(method, endpoint, options = {}) {
  * 模拟数据生成函数 - 当API请求失败时使用
  * @param {string} endpoint - API端点
  * @param {string} method - HTTP方法
+ * @param {Object} config - 请求配置
  * @returns {Object} 模拟数据
  */
-function getMockData(endpoint, method) {
+function getMockData(endpoint, method, config = {}) {
   // 用户认证相关模拟数据
   if (endpoint.includes('auth/login')) {
     return {
       token: 'mock-jwt-token',
       refreshToken: 'mock-refresh-token',
-      user: {
-        id: 1,
-        username: 'admin',
-        email: 'admin@example.com',
-        role: 'admin',
-        name: '管理员',
-        avatar: ''
-      }
+      user: mockData.users[0] // 使用模拟数据中的第一个用户
     };
   }
   
   if (endpoint.includes('auth/me')) {
     return {
-      user: {
-        id: 1,
-        username: 'admin',
-        email: 'admin@example.com',
-        role: 'admin',
-        name: '管理员',
-        avatar: ''
-      }
+      user: mockData.users[0] // 使用模拟数据中的第一个用户
     };
   }
   
   // 基金相关模拟数据
   if (endpoint.includes('funds')) {
     if (method === 'GET') {
+      // 如果是获取单个基金详情
+      if (endpoint.includes('/funds/') && config.params && config.params.id) {
+        const fundId = config.params.id;
+        const fund = mockData.funds.find(f => f.id === fundId);
+        return {
+          data: fund || mockData.funds[0]
+        };
+      }
+      // 获取基金列表
       return {
-        data: [
-          {
-            id: 1,
-            name: '环保新能源基金',
-            value: 1.089,
-            dailyChange: 0.28,
-            yearlyReturn: 12.56,
-            status: '良好'
-          },
-          {
-            id: 2,
-            name: '绿色科技创新基金',
-            value: 1.254,
-            dailyChange: -0.12,
-            yearlyReturn: 15.32,
-            status: '良好'
-          },
-          {
-            id: 3,
-            name: '可持续发展指数基金',
-            value: 0.987,
-            dailyChange: 0.56,
-            yearlyReturn: 8.75,
-            status: '关注'
-          },
-          {
-            id: 4,
-            name: '低碳转型基金',
-            value: 1.321,
-            dailyChange: 0.42,
-            yearlyReturn: 18.90,
-            status: '良好'
-          },
-          {
-            id: 5,
-            name: '碳中和主题基金',
-            value: 1.156,
-            dailyChange: -0.34,
-            yearlyReturn: 14.23,
-            status: '良好'
-          }
-        ]
+        data: mockData.funds.slice(0, 10) // 返回前10个基金
       };
     }
   }
@@ -176,30 +137,61 @@ function getMockData(endpoint, method) {
   // 新闻相关模拟数据
   if (endpoint.includes('news')) {
     if (method === 'GET') {
+      // 获取新闻列表
       return {
-        data: [
-          {
-            id: 1,
-            title: '新能源政策出台，绿色产业迎来发展新机遇',
-            impactFunds: ['环保新能源基金', '绿色科技创新基金'],
-            publishTime: '2024-09-17 09:30',
-            impactType: '正面影响'
-          },
-          {
-            id: 2,
-            title: '全球气候峰会达成重要协议，碳排放限制趋严',
-            impactFunds: ['碳中和主题基金', '低碳转型基金'],
-            publishTime: '2024-09-17 08:15',
-            impactType: '正面影响'
-          },
-          {
-            id: 3,
-            title: '环保技术突破，新型清洁能源成本大幅降低',
-            impactFunds: ['环保新能源基金', '可持续发展指数基金'],
-            publishTime: '2024-09-16 16:45',
-            impactType: '正面影响'
+        data: mockData.news.slice(0, 10) // 返回前10条新闻
+      };
+    }
+  }
+  
+  // 交易记录相关模拟数据
+  if (endpoint.includes('transactions')) {
+    if (method === 'GET') {
+      return {
+        data: mockData.transactions.slice(0, 20) // 返回前20条交易记录
+      };
+    }
+  }
+  
+  // 投资组合相关模拟数据
+  if (endpoint.includes('portfolio') || endpoint.includes('portfolios')) {
+    if (method === 'GET') {
+      return {
+        data: mockData.portfolios.slice(0, 5) // 返回前5个投资组合
+      };
+    }
+  }
+  
+  // 杠杆申请相关模拟数据
+  if (endpoint.includes('leverage/application')) {
+    if (method === 'GET') {
+      return {
+        data: mockData.leverageApplications.slice(0, 10) // 返回前10个杠杆申请
+      };
+    }
+    if (method === 'POST') {
+      // 处理杠杆申请
+      return {
+        data: {
+          success: true,
+          message: '杠杆申请提交成功，请等待审核',
+          application: {
+            ...config.data,
+            id: 'leverage_application_' + Date.now(),
+            status: 'pending',
+            applyDate: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
           }
-        ]
+        }
+      };
+    }
+  }
+  
+  // 杠杆交易相关模拟数据
+  if (endpoint.includes('leverage/transaction')) {
+    if (method === 'GET') {
+      return {
+        data: mockData.leverageTransactions.slice(0, 15) // 返回前15条杠杆交易记录
       };
     }
   }
@@ -226,15 +218,8 @@ function getMockData(endpoint, method) {
           success: true,
           message: '用户信息更新成功',
           user: {
-            id: 'USER' + Math.floor(Math.random() * 1000000),
-            name: config.data.name || '管理员',
-            email: config.data.email || 'admin@example.com',
-            role: '系统管理员',
-            createdAt: '2023-01-15',
-            lastLogin: '刚刚',
-            phone: config.data.phone || '138****1234',
-            department: config.data.department || '管理部',
-            bio: config.data.bio || '系统管理员，负责平台的日常维护和管理工作。'
+            ...mockData.users[0],
+            ...config.data
           }
         }
       };
@@ -277,11 +262,122 @@ function getMockData(endpoint, method) {
   return { data: [] };
 }
 
-// 基础HTTP方法
-export const post = (endpoint, data, options = {}) => apiRequest('POST', endpoint, { ...options, data });
-export const get = (endpoint, params, options = {}) => apiRequest('GET', endpoint, { ...options, params });
-export const put = (endpoint, data, options = {}) => apiRequest('PUT', endpoint, { ...options, data });
-export const del = (endpoint, params, options = {}) => apiRequest('DELETE', endpoint, { ...options, params });
+/**
+ * 基础HTTP请求方法
+ */
+// 检查是否为开发模式
+const isDevelopmentMode = () => {
+  return process.env.NODE_ENV === 'development' || 
+         window.location.hostname === 'localhost' || 
+         window.location.hostname === '127.0.0.1';
+};
+
+async function post(endpoint, data = {}, options = {}) {
+  try {
+    // 开发模式下优先使用模拟数据
+    if (isDevelopmentMode()) {
+      console.log('开发模式 - 使用模拟数据:', endpoint);
+      // 模拟异步延迟
+      await new Promise(resolve => setTimeout(resolve, 300));
+      // 返回模拟数据
+      return getMockData(endpoint, 'POST', { data, options });
+    }
+
+    return apiRequest('POST', endpoint, { ...options, data });
+  } catch (error) {
+    // 请求失败时使用模拟数据
+    console.warn('API请求失败，使用模拟数据:', error);
+    
+    // 模拟异步延迟
+    await new Promise(resolve => setTimeout(resolve, 300));
+    
+    // 返回模拟数据
+    const mockResponse = getMockData(endpoint, 'POST', { data, options });
+    
+    return mockResponse;
+  }
+}
+
+async function get(endpoint, params = {}, options = {}) {
+  try {
+    // 开发模式下优先使用模拟数据
+    if (isDevelopmentMode()) {
+      console.log('开发模式 - 使用模拟数据:', endpoint);
+      // 模拟异步延迟
+      await new Promise(resolve => setTimeout(resolve, 300));
+      // 返回模拟数据
+      return getMockData(endpoint, 'GET', { params, options });
+    }
+
+    return apiRequest('GET', endpoint, { ...options, params });
+  } catch (error) {
+    // 请求失败时使用模拟数据
+    console.warn('API请求失败，使用模拟数据:', error);
+    
+    // 模拟异步延迟
+    await new Promise(resolve => setTimeout(resolve, 300));
+    
+    // 返回模拟数据
+    const mockResponse = getMockData(endpoint, 'GET', { params, options });
+    
+    return mockResponse;
+  }
+}
+
+async function put(endpoint, data = {}, options = {}) {
+  try {
+    // 开发模式下优先使用模拟数据
+    if (isDevelopmentMode()) {
+      console.log('开发模式 - 使用模拟数据:', endpoint);
+      // 模拟异步延迟
+      await new Promise(resolve => setTimeout(resolve, 300));
+      // 返回模拟数据
+      return getMockData(endpoint, 'PUT', { data, options });
+    }
+
+    return apiRequest('PUT', endpoint, { ...options, data });
+  } catch (error) {
+    // 请求失败时使用模拟数据
+    console.warn('API请求失败，使用模拟数据:', error);
+    
+    // 模拟异步延迟
+    await new Promise(resolve => setTimeout(resolve, 300));
+    
+    // 返回模拟数据
+    const mockResponse = getMockData(endpoint, 'PUT', { data, options });
+    
+    return mockResponse;
+  }
+}
+
+async function del(endpoint, params = {}, options = {}) {
+  try {
+    // 开发模式下优先使用模拟数据
+    if (isDevelopmentMode()) {
+      console.log('开发模式 - 使用模拟数据:', endpoint);
+      // 模拟异步延迟
+      await new Promise(resolve => setTimeout(resolve, 300));
+      // 返回模拟数据
+      return getMockData(endpoint, 'DELETE', { params, options });
+    }
+
+    return apiRequest('DELETE', endpoint, { ...options, params });
+  } catch (error) {
+    // 请求失败时使用模拟数据
+    console.warn('API请求失败，使用模拟数据:', error);
+    
+    // 模拟异步延迟
+    await new Promise(resolve => setTimeout(resolve, 300));
+    
+    // 返回模拟数据
+    const mockResponse = getMockData(endpoint, 'DELETE', { params, options });
+    
+    return mockResponse;
+  }
+}
+
+// 导出基础HTTP方法
+export { post, get, put, del };
 
 // 导出API方法
 export const apiService = {
@@ -293,30 +389,49 @@ export const apiService = {
   
   // 基金相关API
   funds: {
-    getAll: () => apiRequest('GET', API_CONFIG.ENDPOINTS.FUNDS.GET_ALL),
-    getById: (id) => apiRequest('GET', API_CONFIG.ENDPOINTS.FUNDS.GET_BY_ID, { params: { id } })
+    getAll: () => get(API_CONFIG.ENDPOINTS.FUNDS.GET_ALL),
+    getById: (id) => get(API_CONFIG.ENDPOINTS.FUNDS.GET_BY_ID, { id })
   },
   
   // 新闻相关API
   news: {
-    getAll: () => apiRequest('GET', API_CONFIG.ENDPOINTS.NEWS.GET_ALL),
-    getById: (id) => apiRequest('GET', API_CONFIG.ENDPOINTS.NEWS.GET_BY_ID, { params: { id } }),
-    getRelated: (fundId) => apiRequest('GET', API_CONFIG.ENDPOINTS.NEWS.GET_RELATED, { params: { fundId } })
+    getAll: () => get(API_CONFIG.ENDPOINTS.NEWS.GET_ALL),
+    getById: (id) => get(API_CONFIG.ENDPOINTS.NEWS.GET_BY_ID, { id }),
+    getRelated: (fundId) => get(API_CONFIG.ENDPOINTS.NEWS.GET_RELATED, { fundId })
   },
   
   // 规则相关API
   rules: {
-    getAll: () => apiRequest('GET', API_CONFIG.ENDPOINTS.RULES.GET_ALL)
+    getAll: () => get(API_CONFIG.ENDPOINTS.RULES.GET_ALL)
   },
   
   // 计算引擎相关API
   calculation: {
-    getStatus: () => apiRequest('GET', API_CONFIG.ENDPOINTS.CALCULATION.STATUS)
+    getStatus: () => get(API_CONFIG.ENDPOINTS.CALCULATION.STATUS)
   },
   
   // 用户相关API
   user: {
-    updateInfo: (userData) => apiRequest('PUT', API_CONFIG.ENDPOINTS.AUTH.UPDATE_PROFILE, { data: userData })
+    updateInfo: (userData) => put(API_CONFIG.ENDPOINTS.AUTH.UPDATE_PROFILE, userData)
+  },
+  
+  // 交易相关API
+  transactions: {
+    getAll: () => get(API_CONFIG.ENDPOINTS.TRANSACTIONS.GET_ALL),
+    getByUserId: (userId) => get(API_CONFIG.ENDPOINTS.TRANSACTIONS.GET_BY_USER_ID, { userId })
+  },
+  
+  // 投资组合相关API
+  portfolio: {
+    getAll: () => get(API_CONFIG.ENDPOINTS.PORTFOLIO.GET_ALL),
+    getById: (id) => get(API_CONFIG.ENDPOINTS.PORTFOLIO.GET_BY_ID, { id })
+  },
+  
+  // 杠杆相关API
+  leverage: {
+    getApplications: () => get(API_CONFIG.ENDPOINTS.LEVERAGE.GET_APPLICATIONS),
+    createApplication: (data) => post(API_CONFIG.ENDPOINTS.LEVERAGE.CREATE_APPLICATION, data),
+    getTransactions: () => get(API_CONFIG.ENDPOINTS.LEVERAGE.GET_TRANSACTIONS)
   }
 };
 

@@ -1,0 +1,885 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/vite.svg" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/vite.svg" />
+    <link rel="icon" type="image/ico" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>投资方式介绍 - 聚财生态基金管理系统</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/src/assets/main.css">
+    
+    <!-- 配置Tailwind自定义颜色 -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: '#10B981', // 绿色作为主色调
+              secondary: '#3B82F6',
+              danger: '#EF4444',
+              success: '#10B981'
+            },
+          },
+        }
+      }
+    </script>
+  </head>
+  <body class="bg-neutral-100 text-neutral-800 min-h-screen flex flex-col">
+    <!-- 导航栏 -->
+    <header class="bg-white shadow-md z-30">
+      <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <i class="fa fa-leaf text-2xl text-primary"></i>
+          <h1 class="text-xl font-bold text-neutral-900">绿色生态基金管理系统</h1>
+        </div>
+        <div class="hidden md:flex items-center space-x-6">
+          <div class="relative">
+            <input type="text" placeholder="搜索..." class="pl-9 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all-300">
+            <i class="fa fa-search absolute left-3 top-1/2 -translate-y-1/2 text-neutral-700"></i>
+          </div>
+          <div class="flex items-center space-x-4">
+            <button class="relative p-2 text-neutral-700 hover:text-primary transition-all-300">
+              <i class="fa fa-bell text-xl"></i>
+              <span class="absolute top-0 right-0 h-2 w-2 bg-danger rounded-full"></span>
+            </button>
+            <div class="header-user-info relative flex items-center space-x-2 cursor-pointer hover-lift">
+              <div class="header-user-avatar w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center">
+                <i class="fa fa-user"></i>
+              </div>
+              <span class="header-user-name font-medium">管理员</span>
+              <i class="fa fa-angle-down text-neutral-700"></i>
+              
+              <!-- 用户下拉菜单 -->
+              <div class="user-dropdown-menu hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-40">
+                <a href="#profile" class="block px-4 py-2 text-neutral-800 hover:bg-primary/10 hover:text-primary transition-colors">
+                  <i class="fa fa-user-o mr-2"></i>个人资料
+                </a>
+                <a href="#settings" class="block px-4 py-2 text-neutral-800 hover:bg-primary/10 hover:text-primary transition-colors">
+                  <i class="fa fa-cog mr-2"></i>账户设置
+                </a>
+                <a href="#change-password" class="change-password-btn block px-4 py-2 text-neutral-800 hover:bg-primary/10 hover:text-primary transition-colors">
+                  <i class="fa fa-lock mr-2"></i>修改密码
+                </a>
+                <div class="border-t border-gray-200 my-1"></div>
+                <a href="#logout" class="logout-btn block px-4 py-2 text-danger hover:bg-danger/10 transition-colors">
+                  <i class="fa fa-sign-out mr-2"></i>注销登录
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="md:hidden text-neutral-800">
+          <i class="fa fa-bars text-xl"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="flex-1 flex">
+      <!-- 侧边栏 -->
+      <aside id="sidebar" class="w-64 bg-white shadow-md fixed h-[calc(100vh-64px)] left-0 top-[64px] transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out z-20 overflow-y-auto">
+        <nav class="py-4">
+          <ul class="space-y-1">
+            <li>
+              <a href="/index.html" class="flex items-center space-x-3 px-6 py-3 text-neutral-800 hover:bg-neutral-100 rounded-r-full transition-all-300">
+                <i class="fa fa-tachometer text-lg w-6 text-center"></i>
+                <span>仪表板</span>
+              </a>
+            </li>
+            <li>
+              <a href="/fund-management.html" class="flex items-center space-x-3 px-6 py-3 text-neutral-800 hover:bg-neutral-100 rounded-r-full transition-all-300">
+                <i class="fa fa-line-chart text-lg w-6 text-center"></i>
+                <span>基金管理</span>
+              </a>
+            </li>
+            <li>
+              <a href="/investment-analysis.html" class="flex items-center space-x-3 px-6 py-3 text-neutral-800 hover:bg-neutral-100 rounded-r-full transition-all-300">
+                <i class="fa fa-pie-chart text-lg w-6 text-center"></i>
+                <span>投资分析</span>
+              </a>
+            </li>
+            <li>
+              <a href="/transaction-history.html" class="flex items-center space-x-3 px-6 py-3 text-neutral-800 hover:bg-neutral-100 rounded-r-full transition-all-300">
+                <i class="fa fa-exchange text-lg w-6 text-center"></i>
+                <span>交易历史</span>
+              </a>
+            </li>
+            <li>
+              <a href="/user-profile.html" class="flex items-center space-x-3 px-6 py-3 text-neutral-800 hover:bg-neutral-100 rounded-r-full transition-all-300">
+                <i class="fa fa-user text-lg w-6 text-center"></i>
+                <span>个人资料</span>
+              </a>
+            </li>
+            <li>
+              <a href="/system-settings.html" class="flex items-center space-x-3 px-6 py-3 text-neutral-800 hover:bg-neutral-100 rounded-r-full transition-all-300">
+                <i class="fa fa-cog text-lg w-6 text-center"></i>
+                <span>系统设置</span>
+              </a>
+            </li>
+            <li>
+              <a href="/investment-method.html" class="flex items-center space-x-3 px-6 py-3 text-primary bg-primary/10 rounded-r-full font-medium">
+                <i class="fa fa-info-circle text-lg w-6 text-center"></i>
+                <span>投资方式介绍</span>
+              </a>
+            </li>
+          </ul>
+          
+          <div class="mt-8 px-6">
+            <h3 class="text-sm font-medium text-neutral-700 uppercase tracking-wider mb-2">快速链接</h3>
+            <ul class="space-y-1">
+              <li>
+                <a href="#reports" class="flex items-center space-x-3 px-3 py-2 text-neutral-800 hover:bg-neutral-100 rounded-lg transition-all-300">
+                  <i class="fa fa-file-text-o text-lg w-6 text-center"></i>
+                  <span>报表中心</span>
+                </a>
+              </li>
+              <li>
+                <a href="#help" class="flex items-center space-x-3 px-3 py-2 text-neutral-800 hover:bg-neutral-100 rounded-lg transition-all-300">
+                  <i class="fa fa-question-circle text-lg w-6 text-center"></i>
+                  <span>帮助中心</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </aside>
+
+      <!-- 内容区域 -->
+      <div class="flex-1 ml-0 md:ml-64 p-4 md:p-6" id="content-area">
+        <!-- 页面头部 -->
+        <div class="mb-6">
+          <h2 class="text-[1.875rem] font-bold text-neutral-900 mb-1">投资方式介绍</h2>
+          <p class="text-neutral-700">了解聚财生态基金管理系统的多时间周期灵活交易模式</p>
+        </div>
+
+        <!-- 核心介绍卡片 -->
+        <div class="bg-white rounded-xl shadow-sm p-6 mb-8 hover-lift">
+          <div class="flex items-center mb-4">
+            <div class="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-4">
+              <i class="fa fa-bullseye text-xl"></i>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-neutral-900">多时间周期灵活交易</h3>
+              <p class="text-neutral-700">低门槛、高灵活、实时透明的投资体验</p>
+            </div>
+          </div>
+          <div class="bg-primary/5 rounded-lg p-4 mb-6">
+            <p class="text-neutral-800">本系统提供 <strong>5分钟、15分钟、60分钟、24小时</strong> 四种短期认购/赎回模式，让您根据自身需求灵活选择投资周期，享受便捷高效的理财服务。</p>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="bg-primary/10 rounded-lg p-4 text-center">
+              <div class="text-3xl font-bold text-primary mb-1">5分钟</div>
+              <div class="text-sm text-neutral-700">超短期交易</div>
+            </div>
+            <div class="bg-primary/10 rounded-lg p-4 text-center">
+              <div class="text-3xl font-bold text-primary mb-1">15分钟</div>
+              <div class="text-sm text-neutral-700">短期交易</div>
+            </div>
+            <div class="bg-primary/10 rounded-lg p-4 text-center">
+              <div class="text-3xl font-bold text-primary mb-1">60分钟</div>
+              <div class="text-sm text-neutral-700">中期交易</div>
+            </div>
+            <div class="bg-primary/10 rounded-lg p-4 text-center">
+              <div class="text-3xl font-bold text-primary mb-1">24小时</div>
+              <div class="text-sm text-neutral-700">长期交易</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 投资前准备 -->
+        <div class="mb-10">
+          <div class="flex items-center mb-4">
+            <div class="h-10 w-10 rounded-full bg-primary text-white flex items-center justify-center mr-3">
+              <i class="fa fa-check"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-neutral-900">一、投资前准备：账户与权限</h3>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 ml-14">
+            <!-- 用户注册与登录 -->
+            <div class="bg-white rounded-xl shadow-sm p-6 hover-lift">
+              <div class="flex items-center mb-4">
+                <div class="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-3">
+                  <i class="fa fa-user-plus"></i>
+                </div>
+                <h4 class="text-lg font-bold text-neutral-900">用户注册与登录</h4>
+              </div>
+              <div class="space-y-3">
+                <p class="text-neutral-700">仅需完成基础信息注册（无需游客角色），登录后进入"个人投资中心"，可查看账户余额、历史交易记录及可用投资产品。</p>
+                <div class="mt-4 flex space-x-3">
+                  <a href="/register.html" class="inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors">
+                    <i class="fa fa-pencil mr-2"></i>立即注册
+                  </a>
+                  <a href="/login.html" class="inline-flex items-center px-4 py-2 border border-gray-300 text-neutral-700 rounded-lg hover:bg-neutral-100 transition-colors">
+                    <i class="fa fa-sign-in mr-2"></i>已有账户，去登录
+                  </a>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 账户充值 -->
+            <div class="bg-white rounded-xl shadow-sm p-6 hover-lift">
+              <div class="flex items-center mb-4">
+                <div class="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-3">
+                  <i class="fa fa-credit-card"></i>
+                </div>
+                <h4 class="text-lg font-bold text-neutral-900">账户充值</h4>
+              </div>
+              <div class="space-y-3">
+                <p class="text-neutral-700">通过绑定支付渠道向账户充值（支持实时到账），充值金额即为可用于认购的资金，账户余额实时更新。</p>
+                <div class="mt-4">
+                  <a href="#recharge" class="inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors">
+                    <i class="fa fa-plus-circle mr-2"></i>去充值
+                  </a>
+                </div>
+              </div>
+              <div class="mt-4 pt-4 border-t border-gray-200">
+                <div class="flex items-center space-x-2 text-sm text-neutral-700">
+                  <i class="fa fa-check-circle text-success"></i>
+                  <span>支持多种支付方式</span>
+                </div>
+                <div class="flex items-center space-x-2 text-sm text-neutral-700 mt-1">
+                  <i class="fa fa-check-circle text-success"></i>
+                  <span>资金实时到账</span>
+                </div>
+                <div class="flex items-center space-x-2 text-sm text-neutral-700 mt-1">
+                  <i class="fa fa-check-circle text-success"></i>
+                  <span>安全加密保障</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 核心投资操作 -->
+        <div class="mb-10">
+          <div class="flex items-center mb-4">
+            <div class="h-10 w-10 rounded-full bg-primary text-white flex items-center justify-center mr-3">
+              <i class="fa fa-bolt"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-neutral-900">二、核心投资操作：认购与赎回（四时间模式）</h3>
+          </div>
+          
+          <!-- 认购部分 -->
+          <div class="bg-white rounded-xl shadow-sm p-6 mb-6 ml-14 hover-lift">
+            <h4 class="text-xl font-bold text-neutral-900 mb-4">1. 认购：选择周期，锁定资金</h4>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <!-- 周期选择 -->
+              <div class="border border-gray-200 rounded-lg p-4 hover:border-primary/30 transition-all-300">
+                <div class="flex items-center mb-3">
+                  <div class="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-3">
+                    <i class="fa fa-clock-o"></i>
+                  </div>
+                  <h5 class="font-medium text-neutral-900">周期选择</h5>
+                </div>
+                <p class="text-neutral-700 text-sm">进入"投资产品页"，选定目标产品后，从 <strong>5分钟、15分钟、60分钟、24小时</strong> 四种周期中任选一种（不同周期对应不同预期收益规则，页面实时显示）。</p>
+                <div class="mt-4 flex flex-wrap gap-2">
+                  <span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">5分钟</span>
+                  <span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">15分钟</span>
+                  <span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">60分钟</span>
+                  <span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">24小时</span>
+                </div>
+              </div>
+              
+              <!-- 金额确认 -->
+              <div class="border border-gray-200 rounded-lg p-4 hover:border-primary/30 transition-all-300">
+                <div class="flex items-center mb-3">
+                  <div class="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-3">
+                    <i class="fa fa-calculator"></i>
+                  </div>
+                  <h5 class="font-medium text-neutral-900">金额确认</h5>
+                </div>
+                <p class="text-neutral-700 text-sm">输入认购金额（需不低于产品起投额、不超过账户余额），系统实时计算"预估收益"，确认后提交认购订单。</p>
+                <div class="mt-4 bg-neutral-50 p-3 rounded-lg">
+                  <div class="flex justify-between items-center text-sm">
+                    <span class="text-neutral-700">账户可用余额:</span>
+                    <span class="font-medium text-neutral-900">¥ 100,000.00</span>
+                  </div>
+                  <div class="flex justify-between items-center text-sm mt-2">
+                    <span class="text-neutral-700">起投金额:</span>
+                    <span class="font-medium text-neutral-900">¥ 100.00</span>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- 资金锁定 -->
+              <div class="border border-gray-200 rounded-lg p-4 hover:border-primary/30 transition-all-300">
+                <div class="flex items-center mb-3">
+                  <div class="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-3">
+                    <i class="fa fa-lock"></i>
+                  </div>
+                  <h5 class="font-medium text-neutral-900">资金锁定</h5>
+                </div>
+                <p class="text-neutral-700 text-sm">订单提交后，对应金额将从账户余额中锁定，锁定时长为所选周期（如选"5分钟"，则资金锁定5分钟，期间不可重复使用）。</p>
+                <div class="mt-4">
+                  <a href="#investment" class="inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors text-sm w-full justify-center">
+                    <i class="fa fa-arrow-right mr-2"></i>前往投资产品页
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 赎回部分 -->
+          <div class="bg-white rounded-xl shadow-sm p-6 ml-14 hover-lift">
+            <h4 class="text-xl font-bold text-neutral-900 mb-4">2. 赎回：周期结束自动赎回，资金实时到账</h4>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <!-- 自动赎回 -->
+              <div class="border border-gray-200 rounded-lg p-4 hover:border-primary/30 transition-all-300">
+                <div class="flex items-center mb-3">
+                  <div class="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-3">
+                    <i class="fa fa-refresh"></i>
+                  </div>
+                  <h5 class="font-medium text-neutral-900">自动赎回</h5>
+                </div>
+                <p class="text-neutral-700 text-sm">无需手动操作，认购周期结束后，系统将自动完成赎回，同步计算"实际收益"（根据周期内产品净值波动计算）。</p>
+              </div>
+              
+              <!-- 资金到账 -->
+              <div class="border border-gray-200 rounded-lg p-4 hover:border-primary/30 transition-all-300">
+                <div class="flex items-center mb-3">
+                  <div class="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-3">
+                    <i class="fa fa-money"></i>
+                  </div>
+                  <h5 class="font-medium text-neutral-900">资金到账</h5>
+                </div>
+                <p class="text-neutral-700 text-sm">赎回后，"本金+实际收益"将实时返还至用户账户余额，可直接用于再次投资或申请提现。</p>
+              </div>
+              
+              <!-- 提前赎回规则 -->
+              <div class="border border-gray-200 rounded-lg p-4 hover:border-primary/30 transition-all-300">
+                <div class="flex items-center mb-3">
+                  <div class="h-8 w-8 rounded-full bg-warning/10 flex items-center justify-center text-warning mr-3">
+                    <i class="fa fa-exclamation-circle"></i>
+                  </div>
+                  <h5 class="font-medium text-neutral-900">提前赎回规则</h5>
+                </div>
+                <p class="text-neutral-700 text-sm">当前设计为"周期内不可提前赎回"，确保交易规则简单透明，避免短期流动性风险。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 投资后管理 -->
+        <div class="mb-10">
+          <div class="flex items-center mb-4">
+            <div class="h-10 w-10 rounded-full bg-primary text-white flex items-center justify-center mr-3">
+              <i class="fa fa-bar-chart"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-neutral-900">三、投资后管理：数据查看与跟踪</h3>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 ml-14">
+            <!-- 实时监控 -->
+            <div class="bg-white rounded-xl shadow-sm p-6 hover-lift">
+              <div class="flex items-center mb-4">
+                <div class="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-3">
+                  <i class="fa fa-eye"></i>
+                </div>
+                <h4 class="text-lg font-bold text-neutral-900">实时监控</h4>
+              </div>
+              <p class="text-neutral-700 mb-4">在"投资中"页面，可查看当前持有的所有产品、对应周期剩余时间、实时净值及当前收益。</p>
+              <div class="bg-neutral-50 p-4 rounded-lg">
+                <div class="flex justify-between items-center mb-3">
+                  <span class="text-sm text-neutral-700">当前持有产品:</span>
+                  <span class="px-2 py-1 bg-success/10 text-success rounded-full text-xs">3只</span>
+                </div>
+                <div class="space-y-2">
+                  <div class="flex justify-between items-center text-sm">
+                    <span class="font-medium">环保新能源基金</span>
+                    <span class="text-success">+2.34%</span>
+                  </div>
+                  <div class="flex justify-between items-center text-sm">
+                    <span class="font-medium">绿色科技创新基金</span>
+                    <span class="text-danger">-0.56%</span>
+                  </div>
+                  <div class="flex justify-between items-center text-sm">
+                    <span class="font-medium">可持续发展指数基金</span>
+                    <span class="text-success">+1.21%</span>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-4">
+                <a href="#monitoring" class="inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors text-sm w-full justify-center">
+                  <i class="fa fa-dashboard mr-2"></i>查看实时监控
+                </a>
+              </div>
+            </div>
+            
+            <!-- 历史记录 -->
+            <div class="bg-white rounded-xl shadow-sm p-6 hover-lift">
+              <div class="flex items-center mb-4">
+                <div class="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-3">
+                  <i class="fa fa-history"></i>
+                </div>
+                <h4 class="text-lg font-bold text-neutral-900">历史记录</h4>
+              </div>
+              <p class="text-neutral-700 mb-4">进入"交易记录"页，可按时间筛选所有认购/赎回记录，包含"周期、金额、收益、到账时间"等详细信息。</p>
+              <div class="bg-neutral-50 p-4 rounded-lg">
+                <div class="flex justify-between items-center mb-3">
+                  <span class="text-sm text-neutral-700">最近交易:</span>
+                  <span class="text-xs text-neutral-700">过去7天</span>
+                </div>
+                <div class="space-y-2">
+                  <div class="flex justify-between items-center text-sm">
+                    <span class="font-medium">环保新能源基金赎回</span>
+                    <span class="text-success">+¥1,256.80</span>
+                  </div>
+                  <div class="flex justify-between items-center text-sm">
+                    <span class="font-medium">绿色科技创新基金认购</span>
+                    <span class="text-neutral-700">-¥5,000.00</span>
+                  </div>
+                  <div class="flex justify-between items-center text-sm">
+                    <span class="font-medium">账户充值</span>
+                    <span class="text-success">+¥10,000.00</span>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-4">
+                <a href="#transactions" class="inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors text-sm w-full justify-center">
+                  <i class="fa fa-list-alt mr-2"></i>查看交易记录
+                </a>
+              </div>
+            </div>
+            
+            <!-- 管理员视角 -->
+            <div class="bg-white rounded-xl shadow-sm p-6 hover-lift">
+              <div class="flex items-center mb-4">
+                <div class="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-3">
+                  <i class="fa fa-user-secret"></i>
+                </div>
+                <h4 class="text-lg font-bold text-neutral-900">管理员视角</h4>
+              </div>
+              <p class="text-neutral-700 mb-4">管理员可在后台查看所有用户的投资数据（含账户余额、交易记录、持仓情况），支持数据导出与统计分析。</p>
+              <div class="bg-neutral-50 p-4 rounded-lg">
+                <div class="flex justify-between items-center mb-3">
+                  <span class="text-sm text-neutral-700">管理功能:</span>
+                </div>
+                <div class="space-y-2">
+                  <div class="flex items-center text-sm">
+                    <i class="fa fa-check-circle text-success mr-2"></i>
+                    <span>用户资产管理</span>
+                  </div>
+                  <div class="flex items-center text-sm">
+                    <i class="fa fa-check-circle text-success mr-2"></i>
+                    <span>交易数据统计</span>
+                  </div>
+                  <div class="flex items-center text-sm">
+                    <i class="fa fa-check-circle text-success mr-2"></i>
+                    <span>数据导出功能</span>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-4">
+                <a href="#admin" class="inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors text-sm w-full justify-center">
+                  <i class="fa fa-sign-in mr-2"></i>进入管理后台
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 交易规则深层解析 -->
+        <div class="mb-10">
+          <div class="flex items-center mb-4">
+            <div class="h-10 w-10 rounded-full bg-primary text-white flex items-center justify-center mr-3">
+              <i class="fa fa-lightbulb-o"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-neutral-900">四、交易规则深层解析</h3>
+          </div>
+          
+          <div class="bg-white rounded-xl shadow-sm p-6 ml-14 hover-lift mb-6">
+            <h4 class="text-xl font-bold text-neutral-900 mb-4">时间周期设计的底层逻辑</h4>
+            <p class="text-neutral-700 mb-4">本项目的核心交易规则围绕 5 分钟、15 分钟、60 分钟、24 小时 四档周期展开，其设计逻辑基于以下三个维度：</p>
+            
+            <div class="space-y-6">
+              <!-- 资金流动性分级 -->
+              <div class="border border-gray-200 rounded-lg p-4 hover:border-primary/30 transition-all-300">
+                <div class="flex items-center mb-3">
+                  <div class="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-3">
+                    <i class="fa fa-exchange"></i>
+                  </div>
+                  <h5 class="font-medium text-neutral-900">资金流动性分级</h5>
+                </div>
+                <p class="text-neutral-700">通过不同周期的锁定时长，将用户资金划分为 "超短期闲置资金"（5-15 分钟）、"日间周转资金"（60 分钟）、"隔夜资金"（24 小时），匹配用户不同场景的资金使用需求。例如，5 分钟周期可满足用户在会议间隙、通勤途中的碎片化投资需求，而 24 小时周期则适合隔夜资金的增值管理。</p>
+                
+                <div class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
+                  <div class="bg-primary/5 rounded-lg p-3 text-center">
+                    <div class="text-2xl font-bold text-primary">5分钟</div>
+                    <div class="text-xs text-neutral-700 mt-1">超短期闲置资金</div>
+                  </div>
+                  <div class="bg-primary/5 rounded-lg p-3 text-center">
+                    <div class="text-2xl font-bold text-primary">15分钟</div>
+                    <div class="text-xs text-neutral-700 mt-1">超短期闲置资金</div>
+                  </div>
+                  <div class="bg-primary/5 rounded-lg p-3 text-center">
+                    <div class="text-2xl font-bold text-primary">60分钟</div>
+                    <div class="text-xs text-neutral-700 mt-1">日间周转资金</div>
+                  </div>
+                  <div class="bg-primary/5 rounded-lg p-3 text-center">
+                    <div class="text-2xl font-bold text-primary">24小时</div>
+                    <div class="text-xs text-neutral-700 mt-1">隔夜资金</div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- 风险收益比的动态平衡 -->
+              <div class="border border-gray-200 rounded-lg p-4 hover:border-primary/30 transition-all-300">
+                <div class="flex items-center mb-3">
+                  <div class="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-3">
+                    <i class="fa fa-balance-scale"></i>
+                  </div>
+                  <h5 class="font-medium text-neutral-900">风险收益比的动态平衡</h5>
+                </div>
+                <p class="text-neutral-700">周期越短，资产池波动范围越小（如 5 分钟周期波动 ±0.1%），收益确定性越高但绝对收益较低；周期越长，波动范围扩大（24 小时周期 ±2%），收益弹性增加但风险同步上升。这种设计通过数学模型将用户风险偏好与周期选择强关联，例如保守型用户倾向于选择 5-15 分钟周期，而进取型用户可能偏好 60 分钟或 24 小时周期。</p>
+                
+                <div class="mt-4 bg-neutral-50 p-4 rounded-lg">
+                  <div class="space-y-3">
+                    <div>
+                      <div class="flex justify-between items-center text-sm mb-1">
+                        <span class="font-medium">5分钟周期</span>
+                        <span class="text-neutral-700">波动范围: ±0.1%</span>
+                      </div>
+                      <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="bg-primary h-2.5 rounded-full" style="width: 25%"></div>
+                      </div>
+                      <div class="flex justify-between text-xs text-neutral-600 mt-1">
+                        <span>风险低</span>
+                        <span>收益低</span>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="flex justify-between items-center text-sm mb-1">
+                        <span class="font-medium">15分钟周期</span>
+                        <span class="text-neutral-700">波动范围: ±0.3%</span>
+                      </div>
+                      <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="bg-primary h-2.5 rounded-full" style="width: 40%"></div>
+                      </div>
+                      <div class="flex justify-between text-xs text-neutral-600 mt-1">
+                        <span>风险中低</span>
+                        <span>收益中低</span>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="flex justify-between items-center text-sm mb-1">
+                        <span class="font-medium">60分钟周期</span>
+                        <span class="text-neutral-700">波动范围: ±1%</span>
+                      </div>
+                      <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="bg-primary h-2.5 rounded-full" style="width: 70%"></div>
+                      </div>
+                      <div class="flex justify-between text-xs text-neutral-600 mt-1">
+                        <span>风险中</span>
+                        <span>收益中</span>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="flex justify-between items-center text-sm mb-1">
+                        <span class="font-medium">24小时周期</span>
+                        <span class="text-neutral-700">波动范围: ±2%</span>
+                      </div>
+                      <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="bg-primary h-2.5 rounded-full" style="width: 100%"></div>
+                      </div>
+                      <div class="flex justify-between text-xs text-neutral-600 mt-1">
+                        <span>风险高</span>
+                        <span>收益高</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- 自动赎回机制的合规性 -->
+              <div class="border border-gray-200 rounded-lg p-4 hover:border-primary/30 transition-all-300">
+                <div class="flex items-center mb-3">
+                  <div class="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-3">
+                    <i class="fa fa-gavel"></i>
+                  </div>
+                  <h5 class="font-medium text-neutral-900">自动赎回机制的合规性</h5>
+                </div>
+                <p class="text-neutral-700">周期结束后自动赎回的规则，既符合《关于规范金融机构资产管理业务的指导意见》中 "打破刚兑" 的要求，又通过系统强制平仓避免用户因主观判断失误导致的风险敞口扩大。例如，若用户在 60 分钟周期内未主动赎回，系统将在到期时按实时净值结算，避免因延迟操作产生的流动性风险。</p>
+                
+                <div class="mt-4 bg-success/5 rounded-lg p-4 border border-success/20">
+                  <div class="flex items-start">
+                    <div class="h-6 w-6 rounded-full bg-success/10 flex items-center justify-center text-success mt-0.5 mr-3 flex-shrink-0">
+                      <i class="fa fa-shield text-xs"></i>
+                    </div>
+                    <div>
+                      <p class="text-sm text-neutral-700">自动赎回机制不仅保障了交易系统的流动性安全，还通过严格的结算流程确保每笔交易都符合监管要求，为用户提供公平、透明、安全的投资环境。</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 杠杆申请 -->
+        <div class="mb-10">
+          <div class="flex items-center mb-4">
+            <div class="h-10 w-10 rounded-full bg-primary text-white flex items-center justify-center mr-3">
+              <i class="fa fa-line-chart"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-neutral-900">五、杠杆申请</h3>
+          </div>
+          
+          <div class="bg-white rounded-xl shadow-sm p-6 ml-14 hover-lift">
+            <p class="text-neutral-700 mb-6">为满足不同投资者的需求，我们提供灵活的杠杆申请机制，您可以根据自身风险承受能力选择合适的杠杆倍数。</p>
+            
+            <div class="space-y-6">
+              <!-- 杠杆倍数选择 -->
+              <div class="border border-gray-200 rounded-lg p-6">
+                <h4 class="text-lg font-bold text-neutral-900 mb-4">杠杆倍数选择</h4>
+                
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
+                  <button class="border border-primary bg-primary/5 text-primary rounded-lg py-3 hover:bg-primary hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30" data-leverage="1">1倍</button>
+                  <button class="border border-gray-200 rounded-lg py-3 hover:border-primary hover:bg-primary/5 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30" data-leverage="5">5倍</button>
+                  <button class="border border-gray-200 rounded-lg py-3 hover:border-primary hover:bg-primary/5 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30" data-leverage="10">10倍</button>
+                  <button class="border border-gray-200 rounded-lg py-3 hover:border-primary hover:bg-primary/5 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30" data-leverage="20">20倍</button>
+                  <button class="border border-gray-200 rounded-lg py-3 hover:border-primary hover:bg-primary/5 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30" data-leverage="50">50倍</button>
+                </div>
+                
+                <div class="flex flex-col md:flex-row md:items-center gap-4 mb-6">
+                  <div class="w-full md:w-1/3">
+                    <label for="custom-leverage" class="block text-sm font-medium text-neutral-700 mb-1">自定义倍数 (1-100倍)</label>
+                    <input type="range" id="custom-leverage" min="1" max="100" value="1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary">
+                  </div>
+                  <div class="w-full md:w-1/6">
+                    <div class="bg-neutral-50 border border-gray-200 rounded-lg p-3 text-center">
+                      <div class="text-2xl font-bold text-primary" id="selected-leverage-value">1</div>
+                      <div class="text-xs text-neutral-700 mt-1">当前选择倍数</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- 杠杆风险提示 -->
+                <div class="bg-danger/5 border border-danger/20 rounded-lg p-4 mb-6">
+                  <div class="flex items-start">
+                    <div class="h-6 w-6 rounded-full bg-danger/10 flex items-center justify-center text-danger mt-0.5 mr-3 flex-shrink-0">
+                      <i class="fa fa-exclamation-triangle text-xs"></i>
+                    </div>
+                    <div>
+                      <h5 class="font-medium text-neutral-900 mb-1">风险提示</h5>
+                      <p class="text-sm text-neutral-700">杠杆交易具有高风险特性，倍数越高风险越大。请根据自身风险承受能力谨慎选择杠杆倍数，确保您充分了解相关风险。</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row gap-4">
+                  <button id="apply-leverage-btn" class="w-full sm:w-1/2 bg-primary text-white py-3 rounded-lg hover:bg-primary-hover transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30">
+                    <i class="fa fa-check-circle mr-2"></i>申请杠杆
+                  </button>
+                  <button id="contact-customer-service-btn" class="w-full sm:w-1/2 border border-primary text-primary py-3 rounded-lg hover:bg-primary/5 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30">
+                    <i class="fa fa-headphones mr-2"></i>联系客服申请更高杠杆
+                  </button>
+                </div>
+              </div>
+              
+              <!-- 杠杆申请说明 -->
+              <div class="border border-gray-200 rounded-lg p-4">
+                <div class="flex items-center mb-3">
+                  <div class="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-3">
+                    <i class="fa fa-info-circle"></i>
+                  </div>
+                  <h5 class="font-medium text-neutral-900">申请说明</h5>
+                </div>
+                <ul class="space-y-2 text-neutral-700 text-sm">
+                  <li class="flex items-start">
+                    <i class="fa fa-check-circle text-success mr-2 mt-1"></i>
+                    <span>系统支持1~100倍杠杆的自助申请，申请提交后将进行风险评估。</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fa fa-check-circle text-success mr-2 mt-1"></i>
+                    <span>更高倍数的杠杆（超过100倍）需通过客服进行人工申请和审核。</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fa fa-check-circle text-success mr-2 mt-1"></i>
+                    <span>杠杆申请审核通过后，您将收到系统通知，杠杆额度将在24小时内生效。</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fa fa-check-circle text-success mr-2 mt-1"></i>
+                    <span>为保障交易安全，系统将根据市场波动情况和用户风险等级动态调整可申请的杠杆倍数上限。</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 常见问题 -->
+        <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+          <h3 class="text-xl font-bold text-neutral-900 mb-4">常见问题</h3>
+          <div class="space-y-4">
+            <div class="border border-gray-200 rounded-lg p-4 hover:border-primary/30 transition-all-300">
+              <h4 class="font-medium text-neutral-900 mb-2">投资周期可以中途更改吗？</h4>
+              <p class="text-neutral-700 text-sm">不可以，一旦选择投资周期并提交订单，周期将无法更改。如需调整投资策略，请在当前周期结束后重新选择。</p>
+            </div>
+            <div class="border border-gray-200 rounded-lg p-4 hover:border-primary/30 transition-all-300">
+              <h4 class="font-medium text-neutral-900 mb-2">收益是如何计算的？</h4>
+              <p class="text-neutral-700 text-sm">收益根据所选周期内对应产品的净值波动计算，系统会在周期结束后自动计算实际收益并返还至您的账户。</p>
+            </div>
+            <div class="border border-gray-200 rounded-lg p-4 hover:border-primary/30 transition-all-300">
+              <h4 class="font-medium text-neutral-900 mb-2">投资资金安全吗？</h4>
+              <p class="text-neutral-700 text-sm">我们采用多重安全措施保障您的资金安全，包括银行级加密技术、严格的资金监管和风险控制机制。</p>
+            </div>
+          </div>
+          <div class="mt-4 text-center">
+            <a href="#help-center" class="inline-flex items-center text-primary hover:text-primary-hover transition-colors">
+              <span>查看更多常见问题</span>
+              <i class="fa fa-angle-right ml-1"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-white border-t border-neutral-200 py-4">
+      <div class="container mx-auto px-4 text-center text-neutral-700 text-sm">
+        <p>© 2024 绿色生态基金管理系统 - 版本 1.0</p>
+      </div>
+    </footer>
+
+    <!-- 移动菜单按钮 -->
+    <button id="mobile-menu-button" class="fixed bottom-6 right-6 md:hidden bg-primary text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center z-40 hover:bg-primary-hover transition-all-300">
+      <i class="fa fa-bars text-xl"></i>
+    </button>
+
+    <!-- 杠杆功能相关JavaScript -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // 获取DOM元素
+        const leverageButtons = document.querySelectorAll('[data-leverage]');
+        const customLeverageSlider = document.getElementById('custom-leverage');
+        const selectedLeverageValue = document.getElementById('selected-leverage-value');
+        const applyLeverageBtn = document.getElementById('apply-leverage-btn');
+        const contactCustomerServiceBtn = document.getElementById('contact-customer-service-btn');
+        
+        // 杠杆按钮点击事件
+        leverageButtons.forEach(button => {
+          button.addEventListener('click', function() {
+            // 移除所有按钮的选中状态
+            leverageButtons.forEach(btn => {
+              btn.classList.remove('border-primary', 'bg-primary/5', 'text-primary');
+              btn.classList.add('border-gray-200');
+            });
+            
+            // 设置当前按钮为选中状态
+            this.classList.remove('border-gray-200');
+            this.classList.add('border-primary', 'bg-primary/5', 'text-primary');
+            
+            // 更新选择的杠杆倍数
+            const leverage = parseInt(this.getAttribute('data-leverage'));
+            selectedLeverageValue.textContent = leverage;
+            customLeverageSlider.value = leverage;
+          });
+        });
+        
+        // 自定义杠杆滑块变化事件
+        customLeverageSlider.addEventListener('input', function() {
+          const leverage = parseInt(this.value);
+          selectedLeverageValue.textContent = leverage;
+          
+          // 移除所有按钮的选中状态
+          leverageButtons.forEach(btn => {
+            btn.classList.remove('border-primary', 'bg-primary/5', 'text-primary');
+            btn.classList.add('border-gray-200');
+          });
+          
+          // 检查是否有匹配的预设按钮
+          const matchingButton = Array.from(leverageButtons).find(btn => 
+            parseInt(btn.getAttribute('data-leverage')) === leverage
+          );
+          
+          if (matchingButton) {
+            matchingButton.classList.remove('border-gray-200');
+            matchingButton.classList.add('border-primary', 'bg-primary/5', 'text-primary');
+          }
+        });
+        
+        // 申请杠杆按钮点击事件
+        applyLeverageBtn.addEventListener('click', function() {
+          const leverage = parseInt(selectedLeverageValue.textContent);
+          
+          // 显示确认对话框
+          if (leverage > 20) {
+            // 高杠杆倍数额外风险提示
+            if (confirm(`您确定要申请${leverage}倍杠杆吗？高杠杆交易风险极大，可能导致您的本金遭受重大损失。`)) {
+              showSuccessMessage(`您已成功提交${leverage}倍杠杆申请，我们将进行风险评估，请耐心等待结果。`);
+            }
+          } else {
+            // 普通杠杆倍数确认
+            showSuccessMessage(`您已成功提交${leverage}倍杠杆申请，我们将进行风险评估，请耐心等待结果。`);
+          }
+        });
+        
+        // 联系客服按钮点击事件
+        contactCustomerServiceBtn.addEventListener('click', function() {
+          showInfoMessage('即将为您转接客服，请稍候...');
+          // 在实际应用中，这里应该跳转到客服页面或打开客服聊天窗口
+        });
+        
+        // 辅助函数：显示成功消息
+        function showSuccessMessage(message) {
+          // 创建成功消息元素
+          const messageElement = document.createElement('div');
+          messageElement.className = 'fixed top-4 right-4 bg-success text-white px-6 py-3 rounded-lg shadow-lg flex items-center z-50 animate-fade-in';
+          messageElement.innerHTML = `
+            <i class="fa fa-check-circle mr-2"></i>
+            <span>${message}</span>
+          `;
+          
+          // 添加到页面
+          document.body.appendChild(messageElement);
+          
+          // 3秒后移除消息
+          setTimeout(() => {
+            messageElement.classList.add('animate-fade-out');
+            setTimeout(() => {
+              document.body.removeChild(messageElement);
+            }, 500);
+          }, 3000);
+        }
+        
+        // 辅助函数：显示信息消息
+        function showInfoMessage(message) {
+          // 创建信息消息元素
+          const messageElement = document.createElement('div');
+          messageElement.className = 'fixed top-4 right-4 bg-primary text-white px-6 py-3 rounded-lg shadow-lg flex items-center z-50 animate-fade-in';
+          messageElement.innerHTML = `
+            <i class="fa fa-info-circle mr-2"></i>
+            <span>${message}</span>
+          `;
+          
+          // 添加到页面
+          document.body.appendChild(messageElement);
+          
+          // 3秒后移除消息
+          setTimeout(() => {
+            messageElement.classList.add('animate-fade-out');
+            setTimeout(() => {
+              document.body.removeChild(messageElement);
+            }, 500);
+          }, 3000);
+        }
+      });
+    </script>
+
+    <!-- JavaScript -->
+    <script type="module" src="/src/apiConfig.js"></script>
+    <script type="module" src="/src/apiService.js"></script>
+    <script type="module" src="/src/eventHandlers.js"></script>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
