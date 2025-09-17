@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>绿色生态基金管理系统</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: '#10B981',
+              'primary-hover': '#059669',
+              success: '#34D399',
+              warning: '#F59E0B',
+              danger: '#EF4444',
+              'neutral-100': '#F9FAFB',
+              'neutral-200': '#F3F4F6',
+              'neutral-700': '#374151',
+              'neutral-800': '#1F2937',
+              'neutral-900': '#111827',
+            },
+          },
+        }
+      }
+    </script>
+    <style type="text/tailwindcss">
+      @tailwind utilities;
+      @layer utilities {
+        .content-auto {
+          content-visibility: auto;
+        }
+        .transition-all-300 {
+          transition: all 0.3s ease;
+        }
+        .hover-lift {
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .hover-lift:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 20px 25px -5px rgba(16, 185, 129, 0.1),
+                      0 10px 10px -5px rgba(16, 185, 129, 0.04);
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-neutral-100 text-neutral-800 min-h-screen flex flex-col">
+    <!-- 导航栏 -->
+    <header class="bg-white shadow-md z-30">
+      <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <i class="fa fa-leaf text-2xl text-primary"></i>
+          <h1 class="text-xl font-bold text-neutral-900">绿色生态基金管理系统</h1>
+        </div>
+        <div class="hidden md:flex items-center space-x-6">
+          <div class="relative">
+            <input type="text" placeholder="搜索..." class="pl-9 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all-300">
+            <i class="fa fa-search absolute left-3 top-1/2 -translate-y-1/2 text-neutral-700"></i>
+          </div>
+          <div class="flex items-center space-x-4">
+            <button class="relative p-2 text-neutral-700 hover:text-primary transition-all-300">
+              <i class="fa fa-bell text-xl"></i>
+              <span class="absolute top-0 right-0 h-2 w-2 bg-danger rounded-full"></span>
+            </button>
+            <div class="flex items-center space-x-2 cursor-pointer hover-lift">
+              <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center">
+                <i class="fa fa-user"></i>
+              </div>
+              <span class="font-medium">管理员</span>
+              <i class="fa fa-angle-down text-neutral-700"></i>
+            </div>
+          </div>
+        </div>
+        <button class="md:hidden text-neutral-800">
+          <i class="fa fa-bars text-xl"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="flex-1 flex">
+      <!-- 侧边栏 -->
+      <aside id="sidebar" class="w-64 bg-white shadow-md fixed h-[calc(100vh-64px)] left-0 top-[64px] transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out z-20 overflow-y-auto">
+        <nav class="py-4">
+          <ul class="space-y-1">
+            <li>
+              <a href="#dashboard" class="flex items-center space-x-3 px-6 py-3 text-primary bg-primary/10 rounded-r-full font-medium">
+                <i class="fa fa-tachometer text-lg w-6 text-center"></i>
+                <span>仪表板</span>
+              </a>
+            </li>
+            <li>
+              <a href="#fund-management" class="flex items-center space-x-3 px-6 py-3 text-neutral-800 hover:bg-neutral-100 rounded-r-full transition-all-300">
+                <i class="fa fa-line-chart text-lg w-6 text-center"></i>
+                <span>基金管理</span>
+              </a>
+            </li>
+            <li>
+              <a href="#news-analysis" class="flex items-center space-x-3 px-6 py-3 text-neutral-800 hover:bg-neutral-100 rounded-r-full transition-all-300">
+                <i class="fa fa-newspaper-o text-lg w-6 text-center"></i>
+                <span>新闻分析</span>
+              </a>
+            </li>
+            <li>
+              <a href="#rule-management" class="flex items-center space-x-3 px-6 py-3 text-neutral-800 hover:bg-neutral-100 rounded-r-full transition-all-300">
+                <i class="fa fa-cogs text-lg w-6 text-center"></i>
+                <span>规则管理</span>
+              </a>
+            </li>
+            <li>
+              <a href="#calculation-engine" class="flex items-center space-x-3 px-6 py-3 text-neutral-800 hover:bg-neutral-100 rounded-r-full transition-all-300">
+                <i class="fa fa-calculator text-lg w-6 text-center"></i>
+                <span>计算引擎</span>
+              </a>
+            </li>
+            <li>
+              <a href="#settings" class="flex items-center space-x-3 px-6 py-3 text-neutral-800 hover:bg-neutral-100 rounded-r-full transition-all-300">
+                <i class="fa fa-sliders text-lg w-6 text-center"></i>
+                <span>系统设置</span>
+              </a>
+            </li>
+          </ul>
+          
+          <div class="mt-8 px-6">
+            <h3 class="text-sm font-medium text-neutral-700 uppercase tracking-wider mb-2">快速链接</h3>
+            <ul class="space-y-1">
+              <li>
+                <a href="#reports" class="flex items-center space-x-3 px-3 py-2 text-neutral-800 hover:bg-neutral-100 rounded-lg transition-all-300">
+                  <i class="fa fa-file-text-o text-lg w-6 text-center"></i>
+                  <span>报表中心</span>
+                </a>
+              </li>
+              <li>
+                <a href="#help" class="flex items-center space-x-3 px-3 py-2 text-neutral-800 hover:bg-neutral-100 rounded-lg transition-all-300">
+                  <i class="fa fa-question-circle text-lg w-6 text-center"></i>
+                  <span>帮助中心</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </aside>
+
+      <!-- 内容区域 -->
+      <div class="flex-1 ml-0 md:ml-64 p-4 md:p-6" id="content-area">
+        <!-- 仪表板页面 -->
+        <div id="dashboard" class="page-content">
+          <!-- 页面头部 -->
+          <div class="mb-6">
+            <h2 class="text-[1.875rem] font-bold text-neutral-900 mb-1">仪表板</h2>
+            <p class="text-neutral-700">欢迎使用绿色生态基金管理系统，以下是最新的基金数据概览</p>
+          </div>
+
+          <!-- 统计卡片 -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white rounded-xl shadow-sm hover-lift p-6">
+              <div class="flex items-start justify-between">
+                <div>
+                  <p class="text-neutral-700 text-sm">总基金数量</p>
+                  <h3 class="text-3xl font-bold mt-1 text-neutral-900">48</h3>
+                </div>
+                <div class="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                  <i class="fa fa-pie-chart"></i>
+                </div>
+              </div>
+              <div class="mt-4 flex items-center text-sm">
+                <span class="text-success flex items-center"><i class="fa fa-arrow-up mr-1"></i>2.1%</span>
+                <span class="text-neutral-700 ml-2">较上月</span>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm hover-lift p-6">
+              <div class="flex items-start justify-between">
+                <div>
+                  <p class="text-neutral-700 text-sm">平均收益率</p>
+                  <h3 class="text-3xl font-bold mt-1 text-neutral-900">8.24%</h3>
+                </div>
+                <div class="h-10 w-10 rounded-full bg-success/10 flex items-center justify-center text-success">
+                  <i class="fa fa-line-chart"></i>
+                </div>
+              </div>
+              <div class="mt-4 flex items-center text-sm">
+                <span class="text-success flex items-center"><i class="fa fa-arrow-up mr-1"></i>0.5%</span>
+                <span class="text-neutral-700 ml-2">较上周</span>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm hover-lift p-6">
+              <div class="flex items-start justify-between">
+                <div>
+                  <p class="text-neutral-700 text-sm">今日新闻数量</p>
+                  <h3 class="text-3xl font-bold mt-1 text-neutral-900">12</h3>
+                </div>
+                <div class="h-10 w-10 rounded-full bg-warning/10 flex items-center justify-center text-warning">
+                  <i class="fa fa-newspaper-o"></i>
+                </div>
+              </div>
+              <div class="mt-4 flex items-center text-sm">
+                <span class="text-danger flex items-center"><i class="fa fa-arrow-down mr-1"></i>1.3%</span>
+                <span class="text-neutral-700 ml-2">较昨日</span>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm hover-lift p-6">
+              <div class="flex items-start justify-between">
+                <div>
+                  <p class="text-neutral-700 text-sm">系统运行时间</p>
+                  <h3 class="text-3xl font-bold mt-1 text-neutral-900">45天</h3>
+                </div>
+                <div class="h-10 w-10 rounded-full bg-primary-hover/10 flex items-center justify-center text-primary-hover">
+                  <i class="fa fa-clock-o"></i>
+                </div>
+              </div>
+              <div class="mt-4 flex items-center text-sm">
+                <span class="text-neutral-700">最近更新: 2分钟前</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 图表区域 -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+            <!-- 净值趋势图 -->
+            <div class="lg:col-span-2 bg-white rounded-xl shadow-sm p-6 hover-lift">
+              <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-neutral-900">净值趋势</h3>
+                <div class="flex space-x-2">
+                  <button class="px-3 py-1 text-sm bg-primary/10 text-primary rounded-md">今日</button>
+                  <button class="px-3 py-1 text-sm text-neutral-700 hover:bg-neutral-100 rounded-md transition-all-300">本周</button>
+                  <button class="px-3 py-1 text-sm text-neutral-700 hover:bg-neutral-100 rounded-md transition-all-300">本月</button>
+                </div>
+              </div>
+              <div class="h-80">
+                <canvas id="netValueChart"></canvas>
+              </div>
+            </div>
+
+            <!-- 收益率分布图 -->
+            <div class="bg-white rounded-xl shadow-sm p-6 hover-lift">
+              <h3 class="text-lg font-bold text-neutral-900 mb-4">收益率分布</h3>
+              <div class="h-80">
+                <canvas id="returnRateChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- 表格和新闻区域 -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- 基金数据表格 -->
+            <div class="lg:col-span-2 bg-white rounded-xl shadow-sm p-6 hover-lift">
+              <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-neutral-900">基金数据</h3>
+                <button class="text-primary hover:text-primary-hover transition-all-300 flex items-center">
+                  <span>查看全部</span>
+                  <i class="fa fa-angle-right ml-1"></i>
+                </button>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="min-w-full">
+                  <thead>
+                    <tr class="border-b border-neutral-200">
+                      <th class="py-3 px-4 text-left text-sm font-medium text-neutral-700">基金名称</th>
+                      <th class="py-3 px-4 text-right text-sm font-medium text-neutral-700">最新净值</th>
+                      <th class="py-3 px-4 text-right text-sm font-medium text-neutral-700">日涨跌幅</th>
+                      <th class="py-3 px-4 text-right text-sm font-medium text-neutral-700">近一年收益率</th>
+                      <th class="py-3 px-4 text-right text-sm font-medium text-neutral-700">状态</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="border-b border-neutral-200 hover:bg-neutral-50 transition-all-300">
+                      <td class="py-3 px-4 text-sm">环保新能源基金</td>
+                      <td class="py-3 px-4 text-right text-sm">1.089</td>
+                      <td class="py-3 px-4 text-right text-sm text-success">+0.28%</td>
+                      <td class="py-3 px-4 text-right text-sm">12.56%</td>
+                      <td class="py-3 px-4 text-right"><span class="px-2 py-1 text-xs rounded-full bg-success/10 text-success">良好</span></td>
+                    </tr>
+                    <tr class="border-b border-neutral-200 hover:bg-neutral-50 transition-all-300">
+                      <td class="py-3 px-4 text-sm">绿色科技创新基金</td>
+                      <td class="py-3 px-4 text-right text-sm">1.254</td>
+                      <td class="py-3 px-4 text-right text-sm text-danger">-0.12%</td>
+                      <td class="py-3 px-4 text-right text-sm">15.32%</td>
+                      <td class="py-3 px-4 text-right"><span class="px-2 py-1 text-xs rounded-full bg-success/10 text-success">良好</span></td>
+                    </tr>
+                    <tr class="border-b border-neutral-200 hover:bg-neutral-50 transition-all-300">
+                      <td class="py-3 px-4 text-sm">可持续发展指数基金</td>
+                      <td class="py-3 px-4 text-right text-sm">0.987</td>
+                      <td class="py-3 px-4 text-right text-sm text-success">+0.56%</td>
+                      <td class="py-3 px-4 text-right text-sm">8.75%</td>
+                      <td class="py-3 px-4 text-right"><span class="px-2 py-1 text-xs rounded-full bg-warning/10 text-warning">关注</span></td>
+                    </tr>
+                    <tr class="border-b border-neutral-200 hover:bg-neutral-50 transition-all-300">
+                      <td class="py-3 px-4 text-sm">低碳转型基金</td>
+                      <td class="py-3 px-4 text-right text-sm">1.321</td>
+                      <td class="py-3 px-4 text-right text-sm text-success">+0.42%</td>
+                      <td class="py-3 px-4 text-right text-sm">18.90%</td>
+                      <td class="py-3 px-4 text-right"><span class="px-2 py-1 text-xs rounded-full bg-success/10 text-success">良好</span></td>
+                    </tr>
+                    <tr class="hover:bg-neutral-50 transition-all-300">
+                      <td class="py-3 px-4 text-sm">碳中和主题基金</td>
+                      <td class="py-3 px-4 text-right text-sm">1.156</td>
+                      <td class="py-3 px-4 text-right text-sm text-danger">-0.34%</td>
+                      <td class="py-3 px-4 text-right text-sm">14.23%</td>
+                      <td class="py-3 px-4 text-right"><span class="px-2 py-1 text-xs rounded-full bg-success/10 text-success">良好</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- 最新新闻列表 -->
+            <div class="bg-white rounded-xl shadow-sm p-6 hover-lift">
+              <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-neutral-900">最新新闻</h3>
+                <button class="text-primary hover:text-primary-hover transition-all-300 flex items-center">
+                  <span>查看全部</span>
+                  <i class="fa fa-angle-right ml-1"></i>
+                </button>
+              </div>
+              <div class="space-y-4">
+                <div class="p-3 border border-neutral-200 rounded-lg hover:border-primary/30 transition-all-300 cursor-pointer">
+                  <h4 class="font-medium text-neutral-900 mb-1 line-clamp-2">新能源政策出台，绿色产业迎来发展新机遇</h4>
+                  <p class="text-xs text-neutral-700 mb-2">影响基金：环保新能源基金、绿色科技创新基金</p>
+                  <div class="flex justify-between items-center text-xs text-neutral-700">
+                    <span>2024-09-17 09:30</span>
+                    <span class="px-2 py-0.5 rounded-full bg-success/10 text-success">正面影响</span>
+                  </div>
+                </div>
+                <div class="p-3 border border-neutral-200 rounded-lg hover:border-primary/30 transition-all-300 cursor-pointer">
+                  <h4 class="font-medium text-neutral-900 mb-1 line-clamp-2">全球气候峰会达成重要协议，碳排放限制趋严</h4>
+                  <p class="text-xs text-neutral-700 mb-2">影响基金：碳中和主题基金、低碳转型基金</p>
+                  <div class="flex justify-between items-center text-xs text-neutral-700">
+                    <span>2024-09-17 08:15</span>
+                    <span class="px-2 py-0.5 rounded-full bg-success/10 text-success">正面影响</span>
+                  </div>
+                </div>
+                <div class="p-3 border border-neutral-200 rounded-lg hover:border-primary/30 transition-all-300 cursor-pointer">
+                  <h4 class="font-medium text-neutral-900 mb-1 line-clamp-2">环保技术突破，新型清洁能源成本大幅降低</h4>
+                  <p class="text-xs text-neutral-700 mb-2">影响基金：环保新能源基金、可持续发展指数基金</p>
+                  <div class="flex justify-between items-center text-xs text-neutral-700">
+                    <span>2024-09-16 16:45</span>
+                    <span class="px-2 py-0.5 rounded-full bg-success/10 text-success">正面影响</span>
+                  </div>
+                </div>
+                <div class="p-3 border border-neutral-200 rounded-lg hover:border-primary/30 transition-all-300 cursor-pointer">
+                  <h4 class="font-medium text-neutral-900 mb-1 line-clamp-2">部分地区环保政策收紧，相关企业面临转型压力</h4>
+                  <p class="text-xs text-neutral-700 mb-2">影响基金：低碳转型基金、可持续发展指数基金</p>
+                  <div class="flex justify-between items-center text-xs text-neutral-700">
+                    <span>2024-09-16 14:20</span>
+                    <span class="px-2 py-0.5 rounded-full bg-danger/10 text-danger">负面影响</span>
+                  </div>
+                </div>
+                <div class="p-3 border border-neutral-200 rounded-lg hover:border-primary/30 transition-all-300 cursor-pointer">
+                  <h4 class="font-medium text-neutral-900 mb-1 line-clamp-2">绿色债券市场规模突破万亿，投资热情高涨</h4>
+                  <p class="text-xs text-neutral-700 mb-2">影响基金：碳中和主题基金、绿色科技创新基金</p>
+                  <div class="flex justify-between items-center text-xs text-neutral-700">
+                    <span>2024-09-16 10:15</span>
+                    <span class="px-2 py-0.5 rounded-full bg-success/10 text-success">正面影响</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-white border-t border-neutral-200 py-4">
+      <div class="container mx-auto px-4 text-center text-neutral-700 text-sm">
+        <p>© 2024 绿色生态基金管理系统 - 版本 1.0</p>
+      </div>
+    </footer>
+
+    <!-- 移动菜单按钮 -->
+    <button id="mobile-menu-button" class="fixed bottom-6 right-6 md:hidden bg-primary text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center z-40 hover:bg-primary-hover transition-all-300">
+      <i class="fa fa-bars text-xl"></i>
+    </button>
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
