@@ -41,15 +41,17 @@
         </div>
         <div class="hidden md:flex items-center space-x-6">
           <div class="relative">
-            <input type="text" placeholder="搜索..." class="pl-9 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all-300">
+            <label for="search-input" class="sr-only">搜索</label>
+            <input type="text" id="search-input" placeholder="搜索..." class="pl-9 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all-300" aria-describedby="search-description">
+            <span id="search-description" class="sr-only">输入关键词进行搜索</span>
             <i class="fa fa-search absolute left-3 top-1/2 -translate-y-1/2 text-neutral-700"></i>
           </div>
           <div class="flex items-center space-x-4">
-            <button class="relative p-2 text-neutral-700 hover:text-primary transition-all-300">
+            <button class="relative p-2 text-neutral-700 hover:text-primary transition-all-300" aria-label="通知" aria-describedby="notification-count">
               <i class="fa fa-bell text-xl"></i>
-              <span class="absolute top-0 right-0 h-2 w-2 bg-danger rounded-full"></span>
+              <span id="notification-count" class="absolute top-0 right-0 h-2 w-2 bg-danger rounded-full" aria-hidden="true"></span>
             </button>
-            <div class="header-user-info relative flex items-center space-x-2 cursor-pointer hover-lift">
+            <div class="header-user-info relative flex items-center space-x-2 cursor-pointer hover-lift" id="user-menu-button" aria-haspopup="true" aria-expanded="false" aria-controls="user-dropdown">
                 <div class="header-user-avatar w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center">
                   <i class="fa fa-user"></i>
                 </div>
@@ -57,7 +59,7 @@
                 <i class="fa fa-angle-down text-neutral-700"></i>
                 </div>
                 <!-- 用户下拉菜单 -->
-                <div class="user-dropdown-menu hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-40">
+                <div id="user-dropdown" class="user-dropdown-menu hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-40" role="menu" aria-labelledby="user-menu-button">
                   <a href="#profile" class="block px-4 py-2 text-neutral-800 hover:bg-primary/10 hover:text-primary transition-colors">
                     <i class="fa fa-user-o mr-2"></i>个人资料
                   </a>
@@ -79,7 +81,7 @@
               </div>
           </div>
         </div>
-        <button class="md:hidden text-neutral-800">
+        <button id="mobile-menu-button" class="md:hidden text-neutral-800" aria-expanded="false" aria-controls="sidebar" aria-label="打开侧边菜单">
           <i class="fa fa-bars text-xl"></i>
         </button>
       </div>
@@ -398,6 +400,55 @@
       
       // 为测试按钮添加点击事件
       document.addEventListener('DOMContentLoaded', () => {
+        // ARIA状态管理 - 用户菜单
+        const userMenuButton = document.getElementById('user-menu-button');
+        const userDropdown = document.getElementById('user-dropdown');
+        
+        if (userMenuButton && userDropdown) {
+          userMenuButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const isExpanded = userMenuButton.getAttribute('aria-expanded') === 'true';
+            userMenuButton.setAttribute('aria-expanded', (!isExpanded).toString());
+            userDropdown.classList.toggle('hidden', isExpanded);
+          });
+        }
+        
+        // ARIA状态管理 - 侧边栏
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const sidebar = document.getElementById('sidebar');
+        
+        if (mobileMenuButton && sidebar) {
+          mobileMenuButton.addEventListener('click', () => {
+            const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+            mobileMenuButton.setAttribute('aria-expanded', (!isExpanded).toString());
+            
+            // 切换侧边栏的显示/隐藏
+            if (sidebar.classList.contains('-translate-x-full')) {
+              sidebar.classList.remove('-translate-x-full');
+              sidebar.classList.add('translate-x-0');
+              mobileMenuButton.innerHTML = '<i class="fa fa-times text-xl"></i>';
+              mobileMenuButton.setAttribute('aria-label', '关闭侧边菜单');
+            } else {
+              sidebar.classList.remove('translate-x-0');
+              sidebar.classList.add('-translate-x-full');
+              mobileMenuButton.innerHTML = '<i class="fa fa-bars text-xl"></i>';
+              mobileMenuButton.setAttribute('aria-label', '打开侧边菜单');
+            }
+          });
+        }
+        
+        // 点击外部关闭下拉菜单
+        document.addEventListener('click', (e) => {
+          if (userMenuButton && userDropdown && 
+              !userMenuButton.contains(e.target) && 
+              !userDropdown.contains(e.target)) {
+            userMenuButton.setAttribute('aria-expanded', 'false');
+            userDropdown.classList.add('hidden');
+          }
+        });
+        
         // API连接测试
         const testButton = document.getElementById('test-api-connection');
         if (testButton) {

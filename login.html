@@ -68,7 +68,10 @@
                   class="w-full pl-10 pr-3 py-3 border border-neutral-300 rounded-lg shadow-sm form-input-focus transition-all-300"
                   placeholder="请输入用户名或邮箱"
                   required
+                  aria-required="true"
+                  aria-describedby="username-description"
                 />
+                <span id="username-description" class="sr-only">请输入您的用户名或电子邮箱</span>
               </div>
             </div>
             
@@ -86,15 +89,20 @@
                   class="w-full pl-10 pr-3 py-3 border border-neutral-300 rounded-lg shadow-sm form-input-focus transition-all-300"
                   placeholder="请输入密码"
                   required
+                  aria-required="true"
+                  aria-describedby="password-description"
                 />
                 <button 
                   type="button" 
                   id="togglePassword" 
                   class="absolute inset-y-0 right-0 pr-3 flex items-center text-neutral-500 hover:text-neutral-700 transition-all-300"
+                  aria-label="显示密码"
+                  aria-pressed="false"
                 >
                   <i class="fa fa-eye"></i>
                 </button>
               </div>
+              <span id="password-description" class="sr-only">请输入您的密码</span>
             </div>
             
             <!-- 记住我和忘记密码 -->
@@ -105,21 +113,23 @@
                   id="rememberMe" 
                   name="rememberMe" 
                   class="h-4 w-4 text-primary border-neutral-300 rounded focus:ring-primary"
+                  aria-label="记住登录状态"
                 />
                 <label for="rememberMe" class="ml-2 block text-sm text-neutral-700">记住我</label>
               </div>
-              <a href="#" class="text-sm font-medium text-primary hover:text-primary-hover transition-all-300">
+              <a href="#" class="text-sm font-medium text-primary hover:text-primary-hover transition-all-300" aria-label="找回您的密码">
                 忘记密码?
               </a>
             </div>
             
             <!-- 错误提示 -->
-            <div id="errorMessage" class="hidden p-3 bg-danger/10 text-danger rounded-lg text-sm"></div>
+            <div id="errorMessage" class="hidden p-3 bg-danger/10 text-danger rounded-lg text-sm" role="alert" aria-live="assertive"></div>
             
             <!-- 登录按钮 -->
             <button 
               type="submit" 
               class="w-full py-3 px-4 bg-primary text-white font-medium rounded-lg hover:bg-primary-hover focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 transition-all-300"
+              aria-label="提交登录表单"
             >
               登录
             </button>
@@ -144,13 +154,13 @@
           
           <!-- 第三方登录 -->
           <div class="flex justify-center space-x-4">
-            <button class="p-3 border border-neutral-300 rounded-full text-neutral-700 hover:bg-neutral-100 transition-all-300">
+            <button class="p-3 border border-neutral-300 rounded-full text-neutral-700 hover:bg-neutral-100 transition-all-300" aria-label="使用微信登录">
               <i class="fa fa-weixin text-lg"></i>
             </button>
-            <button class="p-3 border border-neutral-300 rounded-full text-neutral-700 hover:bg-neutral-100 transition-all-300">
+            <button class="p-3 border border-neutral-300 rounded-full text-neutral-700 hover:bg-neutral-100 transition-all-300" aria-label="使用QQ登录">
               <i class="fa fa-qq text-lg"></i>
             </button>
-            <button class="p-3 border border-neutral-300 rounded-full text-neutral-700 hover:bg-neutral-100 transition-all-300">
+            <button class="p-3 border border-neutral-300 rounded-full text-neutral-700 hover:bg-neutral-100 transition-all-300" aria-label="使用支付宝登录">
               <i class="fa fa-alipay text-lg"></i>
             </button>
           </div>
@@ -172,7 +182,17 @@
         togglePassword.addEventListener('click', () => {
           const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
           passwordInput.setAttribute('type', type);
-          togglePassword.innerHTML = type === 'password' ? '<i class="fa fa-eye"></i>' : '<i class="fa fa-eye-slash"></i>';
+          
+          // 更新按钮图标和ARIA状态
+          if (type === 'password') {
+            togglePassword.innerHTML = '<i class="fa fa-eye"></i>';
+            togglePassword.setAttribute('aria-label', '显示密码');
+            togglePassword.setAttribute('aria-pressed', 'false');
+          } else {
+            togglePassword.innerHTML = '<i class="fa fa-eye-slash"></i>';
+            togglePassword.setAttribute('aria-label', '隐藏密码');
+            togglePassword.setAttribute('aria-pressed', 'true');
+          }
         });
         
         // 登录表单提交

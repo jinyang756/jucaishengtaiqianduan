@@ -3,10 +3,17 @@ import apiService from './apiService.js';
 import authService from './authService.js';
 import { mockData } from './mockData/index.js';
 
+// 添加防重复绑定标记
+let isEventHandlersInitialized = false;
+
 /**
  * 初始化所有事件处理器
  */
 export function initEventHandlers() {
+  // 防止事件处理器重复绑定
+  if (isEventHandlersInitialized) return;
+  isEventHandlersInitialized = true;
+  
   // 等待DOM加载完成
   document.addEventListener('DOMContentLoaded', () => {
     // 初始化侧边栏导航点击事件
@@ -24,9 +31,7 @@ export function initEventHandlers() {
     // 初始化新闻列表点击事件
     initNewsList();
     
-    // 初始化移动菜单点击事件
-    initMobileMenu();
-    
+    // 移动端菜单已在main.js中统一实现，此处不再重复初始化
     // 初始化计算引擎控制面板
     initCalculationPanel();
     
@@ -178,17 +183,8 @@ function initNewsList() {
 /**
  * 初始化移动菜单点击事件
  */
-function initMobileMenu() {
-  const mobileMenuToggle = document.querySelector('#mobileMenuToggle');
-  const sidebar = document.querySelector('.sidebar');
-  
-  if (mobileMenuToggle && sidebar) {
-    mobileMenuToggle.addEventListener('click', () => {
-      sidebar.classList.toggle('hidden');
-      sidebar.classList.toggle('block');
-    });
-  }
-}
+// 移动端菜单功能已在main.js中统一实现，此处不再重复定义
+// function initMobileMenu() { ... }
 
 /**
  * 初始化计算引擎控制面板

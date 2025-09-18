@@ -2,6 +2,7 @@
 import { initEventHandlers } from './eventHandlers.js';
 import authService from './authService.js';
 import { mockData } from './mockData/index.js';
+import { initLazyLoad } from './utils/lazyLoad.js';
 
 // 初始化页面
 window.addEventListener('DOMContentLoaded', async () => {
@@ -44,6 +45,11 @@ window.addEventListener('DOMContentLoaded', async () => {
   
   // 初始化事件处理器
   initEventHandlers();
+  
+  // 初始化图片懒加载
+  initLazyLoad();
+  
+  console.log('系统初始化完成');
 });
 
 /**
@@ -181,31 +187,33 @@ function initReturnRateChart() {
 // 初始化移动端菜单
 function initMobileMenu() {
   const sidebar = document.getElementById('sidebar');
-  const mobileMenuButton = document.getElementById('mobile-menu-button');
+  const mobileMenuButton = document.getElementById('mobile-menu-button') || document.querySelector('#mobileMenuToggle');
   
-  mobileMenuButton.addEventListener('click', () => {
-    sidebar.classList.toggle('-translate-x-full');
-    
-    // 切换按钮图标
-    const icon = mobileMenuButton.querySelector('i');
-    if (sidebar.classList.contains('-translate-x-full')) {
-      icon.classList.remove('fa-times');
-      icon.classList.add('fa-bars');
-    } else {
-      icon.classList.remove('fa-bars');
-      icon.classList.add('fa-times');
-    }
-  });
-  
-  // 点击侧边栏以外的区域关闭侧边栏
-  document.addEventListener('click', (e) => {
-    if (!sidebar.contains(e.target) && !mobileMenuButton.contains(e.target) && !sidebar.classList.contains('-translate-x-full') && window.innerWidth < 768) {
-      sidebar.classList.add('-translate-x-full');
+  if (mobileMenuButton && sidebar) {
+    mobileMenuButton.addEventListener('click', () => {
+      sidebar.classList.toggle('-translate-x-full');
+      
+      // 切换按钮图标
       const icon = mobileMenuButton.querySelector('i');
-      icon.classList.remove('fa-times');
-      icon.classList.add('fa-bars');
-    }
-  });
+      if (sidebar.classList.contains('-translate-x-full')) {
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+      } else {
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-times');
+      }
+    });
+    
+    // 点击侧边栏以外的区域关闭侧边栏 - 统一使用文档定义的移动端断点640px
+    document.addEventListener('click', (e) => {
+      if (!sidebar.contains(e.target) && !mobileMenuButton.contains(e.target) && !sidebar.classList.contains('-translate-x-full') && window.innerWidth < 640) {
+        sidebar.classList.add('-translate-x-full');
+        const icon = mobileMenuButton.querySelector('i');
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+      }
+    });
+  }
 }
 
 // 开始实时数据更新
