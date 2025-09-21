@@ -1,5 +1,6 @@
 // API基础URL
-const API_BASE_URL = 'http://localhost:8000';
+// 在Vercel环境中使用相对路径，确保前后端能够正确连接
+const API_BASE_URL = '';
 
 // 通用请求函数
 async function request(url, method = 'GET', data = null, headers = {}) {
