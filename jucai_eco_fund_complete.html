@@ -1,0 +1,2673 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>聚财生态基金系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    
+    <!-- Tailwind CSS 配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#22c55e',
+                        secondary: '#10b981',
+                        tertiary: '#059669',
+                        dark: '#047857',
+                        light: '#d1fae5',
+                        danger: '#ef4444',
+                        warning: '#f59e0b',
+                        success: '#10b981',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    animation: {
+                        'slide-up': 'slideUp 0.5s ease-out',
+                        'fade-in': 'fadeIn 0.5s ease-out',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        }
+                    },
+                },
+            }
+        }
+    </script>
+    
+    <!-- 自定义工具类 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .glass-effect {
+                background-color: rgba(255, 255, 255, 0.85);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+            }
+            
+            .glass-effect-dark {
+                background-color: rgba(23, 25, 35, 0.75);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            }
+            
+            .glass-effect:hover {
+                background-color: rgba(255, 255, 255, 0.9);
+                transition: background-color 0.3s ease;
+            }
+            .gradient-bg {
+                background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
+                --tw-gradient-from: #22c55e;
+                --tw-gradient-to: #047857;
+            }
+            .gradient-text {
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent;
+                background-image: linear-gradient(to right, var(--tw-gradient-stops));
+                --tw-gradient-from: #22c55e;
+                --tw-gradient-to: #047857;
+            }
+            .shadow-custom {
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            }
+            .card-hover {
+                transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+                position: relative;
+                overflow: hidden;
+            }
+            .card-hover::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 3px;
+                background: linear-gradient(90deg, #22c55e, #047857);
+                transform: scaleX(0);
+                transform-origin: left;
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                z-index: 1;
+            }
+            .card-hover:hover {
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+                transform: translateY(-4px);
+            }
+            .card-hover:hover::before {
+                transform: scaleX(1);
+            }
+            /* 基金卡片优化 */
+            .fund-card {
+                position: relative;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                overflow: hidden;
+            }
+            .fund-card::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                border: 2px solid transparent;
+                border-radius: inherit;
+                background: linear-gradient(90deg, #22c55e, #047857) border-box;
+                -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+                -webkit-mask-composite: xor;
+                mask-composite: exclude;
+                pointer-events: none;
+                opacity: 0;
+                transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .fund-card:hover::after {
+                opacity: 1;
+            }
+            /* 价格动画 */
+            .price-change {
+                transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .price-up {
+                animation: priceUp 0.5s ease-out;
+            }
+            @keyframes priceUp {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.1); }
+                100% { transform: scale(1); }
+            }
+            /* 按钮交互优化 */
+            .btn-primary {
+                position: relative;
+                overflow: hidden;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                z-index: 1;
+            }
+            .btn-primary::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: rgba(255, 255, 255, 0.2);
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                z-index: -1;
+            }
+            .btn-primary:hover::before {
+                left: 100%;
+            }
+            
+            /* 加载状态指示器 */
+            .loader {
+                border: 3px solid rgba(255, 255, 255, 0.3);
+                border-radius: 50%;
+                border-top: 3px solid #22c55e;
+                width: 24px;
+                height: 24px;
+                animation: spin 1s linear infinite;
+            }
+            
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+            
+            .loading-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(255, 255, 255, 0.8);
+                backdrop-filter: blur(2px);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                z-index: 9999;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s ease, visibility 0.3s ease;
+            }
+            
+            .loading-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+            
+            .loading-text {
+                margin-top: 12px;
+                color: #334155;
+                font-weight: 500;
+            }
+            
+            /* 移动端优化 */
+            @media (max-width: 640px) {
+                .mobile-grid {
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 12px;
+                }
+                
+                .mobile-full {
+                    width: 100%;
+                    margin-left: 0;
+                    margin-right: 0;
+                }
+                
+                .modal-content {
+                    margin: 12px;
+                    border-radius: 12px;
+                }
+                
+                .nav-item {
+                    font-size: 14px;
+                    padding: 0 8px;
+                }
+                
+                .btn-mobile {
+                    padding: 12px 16px;
+                    font-size: 14px;
+                }
+            }
+            
+            /* 表单元素优化 */
+            input:focus,
+            select:focus,
+            textarea:focus {
+                outline: none;
+                box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+            }
+            
+            /* 图表交互优化 */
+            .chart-container {
+                position: relative;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            
+            .chart-container:hover {
+                transform: translateY(-2px);
+            }
+            
+            /* 滚动体验优化 */
+            html {
+                scroll-behavior: smooth;
+            }
+            
+            body {
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+    </style>
+    
+    <!-- 自定义样式 -->
+    <style>
+        /* 全局样式 */
+        body {
+            background-color: #f8fafc;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+        
+        /* 滚动条样式 */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
+        /* 动画效果 */
+        .slide-up-animation {
+            animation: slideUp 0.5s ease-out forwards;
+        }
+        .fade-in-animation {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        /* 渐变按钮悬停效果 */
+        .gradient-button {
+            background: linear-gradient(to right, #22c55e, #047857);
+            transition: all 0.3s ease;
+        }
+        .gradient-button:hover {
+            background: linear-gradient(to right, #16a34a, #065f46);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+        }
+        
+        /* 进度条样式 */
+        .progress-bar {
+            position: relative;
+            height: 4px;
+            background-color: #e5e7eb;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: linear-gradient(to right, #22c55e, #047857);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+        
+        /* 模态框样式 */
+        .modal {
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-backdrop {
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .modal.active .modal-backdrop {
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+        .modal-content {
+            transform: scale(0.95) translateY(20px);
+            opacity: 0;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            max-height: 85vh;
+            overflow-y: auto;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        }
+        .modal.active .modal-content {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+        
+        /* 图表容器响应式调整 */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 220px;
+        }
+        
+        /* 导航栏滚动效果 */
+        nav.scrolled {
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(8px);
+        }
+        
+        /* 滚动动画元素 */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .animate-on-scroll.animated {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* 页面加载动画 */
+        .animate-on-load {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* 按钮交互增强 */
+        .btn-primary {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%, -50%);
+            transform-origin: 50% 50%;
+        }
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(100, 100);
+                opacity: 0;
+            }
+        }
+        .btn-primary:focus:not(:active)::after {
+            animation: ripple 0.6s ease-out;
+        }
+        
+        /* 卡片悬停效果增强 */
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        /* 底部导航栏按钮样式 */
+        nav.fixed button,
+        .nav-button {
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        nav.fixed button:hover,
+        .nav-button:hover {
+            transform: translateY(-2px);
+        }
+        nav.fixed button:active,
+        .nav-button:active {
+            transform: scale(0.95);
+        }
+        nav.fixed button.text-primary {
+            position: relative;
+        }
+        nav.fixed button.text-primary::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 16px;
+            height: 3px;
+            background-color: #22c55e;
+            border-radius: 3px;
+        }
+        nav.fixed button i,
+        .nav-button i {
+            transition: all 0.3s ease;
+        }
+        nav.fixed button:hover i,
+        .nav-button:hover i {
+            transform: scale(1.1);
+        }
+        
+        /* 交易数量输入框样式 */
+        #quantity:focus {
+            transition: all 0.2s ease;
+        }
+        
+        /* 通知徽章动画 */
+        .notification-badge {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 5px rgba(239, 68, 68, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+            }
+        }
+        
+        /* 登录页面动画 */
+        .login-container {
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body class="antialiased text-gray-800">
+    <!-- 加载状态指示器 -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loader"></div>
+        <div class="loading-text">加载中...</div>
+    </div>
+    
+    <!-- 登录页面 -->
+    <div id="loginPage" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 to-dark/10">
+        <div class="w-full max-w-md p-8 glass-effect rounded-xl shadow-custom login-container">
+            <div class="text-center mb-8">
+                <h1 class="text-[clamp(1.8rem,5vw,2.5rem)] font-bold gradient-text">聚财生态基金</h1>
+                <p class="text-gray-600 mt-2">绿色金融，财富增长新选择</p>
+            </div>
+            
+            <form id="loginForm" class="space-y-6">
+                <div>
+                    <label for="username" class="block text-sm font-medium text-gray-700 mb-1">用户名</label>
+                    <input type="text" id="username" name="username" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all" placeholder="请输入用户名" required>
+                </div>
+                
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1">密码</label>
+                    <input type="password" id="password" name="password" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all" placeholder="请输入密码" required>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="remember" class="h-4 w-4 text-primary focus:ring-primary/50 border-gray-300 rounded">
+                        <label for="remember" class="ml-2 block text-sm text-gray-700">记住我</label>
+                    </div>
+                    <a href="#" class="text-sm text-primary hover:text-dark transition-colors">忘记密码?</a>
+                </div>
+                
+                <button type="submit" class="w-full py-3 px-4 gradient-button text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all">
+                    登录
+                </button>
+            </form>
+            
+            <div class="mt-6 text-center">
+                <p class="text-sm text-gray-600">
+                    还没有账号? <a href="#" class="text-primary hover:text-dark font-medium">立即注册</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 主应用界面 -->
+    <div id="appContainer" class="min-h-screen hidden">
+        <!-- 顶部导航栏 -->
+        <nav class="fixed top-0 left-0 right-0 glass-effect z-50 px-4 py-3">
+            <div class="flex items-center justify-between max-w-5xl mx-auto">
+                <div class="flex items-center">
+                    <h1 class="text-xl font-bold gradient-text">聚财生态基金</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="notificationBtn" class="relative p-2 text-gray-600 hover:text-primary transition-colors">
+                        <i class="fa fa-bell-o text-xl"></i>
+                        <span class="absolute top-0 right-0 w-2 h-2 bg-danger rounded-full"></span>
+                    </button>
+                    <button id="userBtn" class="p-2 text-gray-600 hover:text-primary transition-colors">
+                        <i class="fa fa-user-o text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- 主要内容区域 -->
+        <main class="pt-16 pb-20 px-4 max-w-5xl mx-auto">
+            <!-- 首页 -->
+            <section id="homePage" class="space-y-6">
+                <!-- 轮播图 -->
+                <div class="relative rounded-xl overflow-hidden shadow-custom h-48">
+                    <div id="carousel" class="flex transition-transform duration-500 ease-in-out h-full">
+                        <div class="carousel-slide flex-shrink-0 w-full h-full">
+                            <img src="https://picsum.photos/id/292/800/300" alt="绿色金融" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-4">
+                                <h3 class="text-white text-lg font-bold">绿色金融新机遇</h3>
+                                <p class="text-white/90 text-sm">把握"双碳"政策红利，投资绿色未来</p>
+                            </div>
+                        </div>
+                        <div class="carousel-slide flex-shrink-0 w-full h-full">
+                            <img src="https://picsum.photos/id/119/800/300" alt="碳资产管理" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-4">
+                                <h3 class="text-white text-lg font-bold">碳资产投资</h3>
+                                <p class="text-white/90 text-sm">碳交易市场快速发展，投资新赛道</p>
+                            </div>
+                        </div>
+                        <div class="carousel-slide flex-shrink-0 w-full h-full">
+                            <img src="https://picsum.photos/id/188/800/300" alt="清洁能源" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-4">
+                                <h3 class="text-white text-lg font-bold">清洁能源基金</h3>
+                                <p class="text-white/90 text-sm">可持续发展，创造长期价值</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 轮播图导航 -->
+                    <div class="absolute bottom-3 left-0 right-0 flex justify-center space-x-2">
+                        <button class="carousel-dot w-2 h-2 rounded-full bg-white opacity-100"></button>
+                        <button class="carousel-dot w-2 h-2 rounded-full bg-white opacity-50"></button>
+                        <button class="carousel-dot w-2 h-2 rounded-full bg-white opacity-50"></button>
+                    </div>
+                </div>
+                
+                <!-- 快速操作 -->
+                <div class="grid grid-cols-4 gap-3 animate-on-scroll">
+                    <button class="flex flex-col items-center justify-center p-3 rounded-lg bg-white shadow-custom card-hover">
+                        <div class="w-10 h-10 rounded-full gradient-bg flex items-center justify-center mb-2">
+                            <i class="fa fa-arrow-up text-white"></i>
+                        </div>
+                        <span class="text-xs text-gray-700">开多</span>
+                    </button>
+                    <button class="flex flex-col items-center justify-center p-3 rounded-lg bg-white shadow-custom card-hover">
+                        <div class="w-10 h-10 rounded-full gradient-bg flex items-center justify-center mb-2">
+                            <i class="fa fa-arrow-down text-white"></i>
+                        </div>
+                        <span class="text-xs text-gray-700">开空</span>
+                    </button>
+                    <button class="flex flex-col items-center justify-center p-3 rounded-lg bg-white shadow-custom card-hover">
+                        <div class="w-10 h-10 rounded-full gradient-bg flex items-center justify-center mb-2">
+                            <i class="fa fa-calendar text-white"></i>
+                        </div>
+                        <span class="text-xs text-gray-700">定投</span>
+                    </button>
+                    <button class="flex flex-col items-center justify-center p-3 rounded-lg bg-white shadow-custom card-hover">
+                        <div class="w-10 h-10 rounded-full gradient-bg flex items-center justify-center mb-2">
+                            <i class="fa fa-list-alt text-white"></i>
+                        </div>
+                        <span class="text-xs text-gray-700">记录</span>
+                    </button>
+                </div>
+                
+                <!-- 基金板块 -->
+                <div class="animate-on-scroll">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-bold">热门基金</h2>
+                        <a href="#" class="text-primary text-sm flex items-center">
+                            查看全部 <i class="fa fa-chevron-right ml-1 text-xs"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4 animate-on-scroll">
+                        <!-- 基金卡片1 -->
+                        <div class="bg-white rounded-xl p-4 shadow-custom card-hover animate-on-scroll">
+                            <div class="flex justify-between items-start mb-3">
+                                <h3 class="font-semibold">清洁能源基金</h3>
+                                <span class="text-xs px-2 py-1 bg-success/10 text-success rounded-full">+8.65%</span>
+                            </div>
+                            <div class="h-16">
+                                <canvas id="fundChart1"></canvas>
+                            </div>
+                            <div class="mt-3 flex justify-between items-center">
+                                <span class="text-sm text-gray-500">今日 +1.23%</span>
+                                <button class="px-3 py-1 text-xs gradient-button text-white rounded-full">
+                                    交易
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- 基金卡片2 -->
+                        <div class="bg-white rounded-xl p-4 shadow-custom card-hover animate-on-scroll">
+                            <div class="flex justify-between items-start mb-3">
+                                <h3 class="font-semibold">环保科技基金</h3>
+                                <span class="text-xs px-2 py-1 bg-success/10 text-success rounded-full">+7.32%</span>
+                            </div>
+                            <div class="h-16">
+                                <canvas id="fundChart2"></canvas>
+                            </div>
+                            <div class="mt-3 flex justify-between items-center">
+                                <span class="text-sm text-gray-500">今日 +0.89%</span>
+                                <button class="px-3 py-1 text-xs gradient-button text-white rounded-full">
+                                    交易
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- 基金卡片3 -->
+                        <div class="bg-white rounded-xl p-4 shadow-custom card-hover animate-on-scroll">
+                            <div class="flex justify-between items-start mb-3">
+                                <h3 class="font-semibold">碳资产管理基金</h3>
+                                <span class="text-xs px-2 py-1 bg-success/10 text-success rounded-full">+12.45%</span>
+                            </div>
+                            <div class="h-16">
+                                <canvas id="fundChart3"></canvas>
+                            </div>
+                            <div class="mt-3 flex justify-between items-center">
+                                <span class="text-sm text-gray-500">今日 -0.32%</span>
+                                <button class="px-3 py-1 text-xs gradient-button text-white rounded-full">
+                                    交易
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- 基金卡片4 -->
+                        <div class="bg-white rounded-xl p-4 shadow-custom card-hover">
+                            <div class="flex justify-between items-start mb-3">
+                                <h3 class="font-semibold">绿色交通基金</h3>
+                                <span class="text-xs px-2 py-1 bg-success/10 text-success rounded-full">+9.78%</span>
+                            </div>
+                            <div class="h-16">
+                                <canvas id="fundChart4"></canvas>
+                            </div>
+                            <div class="mt-3 flex justify-between items-center">
+                                <span class="text-sm text-gray-500">今日 +1.56%</span>
+                                <button class="px-3 py-1 text-xs gradient-button text-white rounded-full">
+                                    交易
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 新闻资讯 -->
+                <div class="animate-on-scroll">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-bold">市场热点</h2>
+                        <a href="#" class="text-primary text-sm flex items-center">
+                            更多资讯 <i class="fa fa-chevron-right ml-1 text-xs"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <div class="bg-white p-4 rounded-xl shadow-custom animate-on-scroll">
+                            <h3 class="font-semibold mb-1 line-clamp-1">国家发改委发布《绿色低碳技术创新支持政策》</h3>
+                            <div class="flex items-center text-xs text-gray-500">
+                                <span>2025-09-18</span>
+                                <span class="mx-2">|</span>
+                                <span>政策动态</span>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white p-4 rounded-xl shadow-custom animate-on-scroll">
+                            <h3 class="font-semibold mb-1 line-clamp-1">碳交易市场成交量创历史新高，绿色金融迎来发展机遇</h3>
+                            <div class="flex items-center text-xs text-gray-500">
+                                <span>2025-09-18</span>
+                                <span class="mx-2">|</span>
+                                <span>市场动态</span>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white p-4 rounded-xl shadow-custom">
+                            <h3 class="font-semibold mb-1 line-clamp-1">新能源汽车销量同比增长35%，产业链投资价值凸显</h3>
+                            <div class="flex items-center text-xs text-gray-500">
+                                <span>2025-09-18</span>
+                                <span class="mx-2">|</span>
+                                <span>行业动态</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 行情页面 -->
+            <section id="marketPage" class="space-y-6 hidden animate-on-load">
+                <!-- 搜索栏 -->
+                <div class="relative">
+                    <input type="text" placeholder="搜索基金名称或代码" class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all">
+                    <i class="fa fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                </div>
+                
+                <!-- 分类标签 -->
+                <div class="flex space-x-3 overflow-x-auto pb-2 animate-on-scroll">
+                    <button class="px-4 py-2 text-sm rounded-full bg-primary text-white whitespace-nowrap">全部基金</button>
+                    <button class="px-4 py-2 text-sm rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors whitespace-nowrap">清洁能源</button>
+                    <button class="px-4 py-2 text-sm rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors whitespace-nowrap">环保科技</button>
+                    <button class="px-4 py-2 text-sm rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors whitespace-nowrap">碳资产管理</button>
+                    <button class="px-4 py-2 text-sm rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors whitespace-nowrap">绿色交通</button>
+                    <button class="px-4 py-2 text-sm rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors whitespace-nowrap">绿色建筑</button>
+                    <button class="px-4 py-2 text-sm rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors whitespace-nowrap">可持续农业</button>
+                </div>
+                
+                <!-- 行情图表 -->
+                <div class="bg-white p-4 rounded-xl shadow-custom animate-on-scroll">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-semibold">碳资产管理基金</h3>
+                        <div class="flex space-x-2">
+                            <button class="px-3 py-1 text-xs bg-gray-100 text-gray-700 rounded-full active">1日</button>
+                            <button class="px-3 py-1 text-xs bg-gray-200 text-gray-700 rounded-full">1周</button>
+                            <button class="px-3 py-1 text-xs bg-gray-200 text-gray-700 rounded-full">1月</button>
+                            <button class="px-3 py-1 text-xs bg-gray-200 text-gray-700 rounded-full">1年</button>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <canvas id="marketChart"></canvas>
+                    </div>
+                    
+                    <div class="grid grid-cols-4 gap-2 mt-4 text-center">
+                        <div>
+                            <p class="text-xs text-gray-500">现价</p>
+                            <p class="font-semibold">¥118.35</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500">涨幅</p>
+                            <p class="font-semibold text-success">+1.23%</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500">成交量</p>
+                            <p class="font-semibold">12.5万</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500">成交额</p>
+                            <p class="font-semibold">¥1.48亿</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 基金列表 -->
+                <div class="animate-on-scroll">
+                    <h2 class="text-lg font-bold mb-4">今日涨跌幅排行</h2>
+                    
+                    <div class="space-y-3">
+                        <div class="bg-white p-4 rounded-xl shadow-custom flex justify-between items-center card-hover fund-card animate-on-scroll">
+                            <div>
+                                <h3 class="font-semibold">碳资产管理基金</h3>
+                                <p class="text-xs text-gray-500">JCFUND003</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-semibold text-success">+12.45%</p>
+                                <p class="text-xs text-gray-500">今日 +1.23%</p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white p-4 rounded-xl shadow-custom flex justify-between items-center card-hover fund-card animate-on-scroll">
+                            <div>
+                                <h3 class="font-semibold">绿色交通基金</h3>
+                                <p class="text-xs text-gray-500">JCFUND004</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-semibold text-success">+9.78%</p>
+                                <p class="text-xs text-gray-500">今日 +0.89%</p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white p-4 rounded-xl shadow-custom flex justify-between items-center card-hover fund-card">
+                            <div>
+                                <h3 class="font-semibold">清洁能源基金</h3>
+                                <p class="text-xs text-gray-500">JCFUND001</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-semibold text-success">+8.65%</p>
+                                <p class="text-xs text-gray-500">今日 -0.32%</p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white p-4 rounded-xl shadow-custom flex justify-between items-center card-hover fund-card">
+                            <div>
+                                <h3 class="font-semibold">环保科技基金</h3>
+                                <p class="text-xs text-gray-500">JCFUND002</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-semibold text-success">+7.32%</p>
+                                <p class="text-xs text-gray-500">今日 +1.56%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 交易页面 -->
+            <section id="tradePage" class="space-y-6 hidden animate-on-load">
+                <!-- 交易模式选择 -->
+                <div class="bg-white p-4 rounded-xl shadow-custom animate-on-scroll">
+                    <div class="flex space-x-2">
+                        <button class="flex-1 py-2 rounded-lg bg-primary text-white text-center">合约交易</button>
+                        <button class="flex-1 py-2 rounded-lg bg-gray-100 text-gray-700 text-center">基金定投</button>
+                        <button class="flex-1 py-2 rounded-lg bg-gray-100 text-gray-700 text-center">ETF交易</button>
+                    </div>
+                </div>
+                
+                <!-- 交易品种 -->
+                <div class="bg-white p-4 rounded-xl shadow-custom animate-on-scroll">
+                    <h3 class="font-semibold mb-4">碳资产管理基金</h3>
+                    
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <p class="text-xs text-gray-500">最新价格</p>
+                            <p class="font-semibold">¥118.35</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500">24h涨跌</p>
+                            <p class="font-semibold text-success">+1.23%</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500">24h最高价</p>
+                            <p class="font-semibold">¥119.50</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500">24h最低价</p>
+                            <p class="font-semibold">¥116.80</p>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <canvas id="tradeChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- 交易面板 -->
+                <div class="bg-white p-4 rounded-xl shadow-custom animate-on-scroll">
+                    <div class="flex space-x-2 mb-4">
+                        <button class="flex-1 py-2 rounded-lg bg-primary text-white text-center">开多</button>
+                        <button class="flex-1 py-2 rounded-lg bg-gray-100 text-gray-700 text-center">开空</button>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm text-gray-600 mb-1">保证金模式</label>
+                            <div class="flex space-x-2">
+                                <button class="flex-1 py-2 text-sm rounded-lg bg-primary text-white text-center">全仓</button>
+                                <button class="flex-1 py-2 text-sm rounded-lg bg-gray-100 text-gray-700 text-center">逐仓</button>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm text-gray-600 mb-1">杠杆倍数</label>
+                            <div class="grid grid-cols-5 gap-2">
+                                <button class="py-2 text-sm rounded-lg bg-primary text-white text-center">1x</button>
+                                <button class="py-2 text-sm rounded-lg bg-gray-100 text-gray-700 text-center">5x</button>
+                                <button class="py-2 text-sm rounded-lg bg-gray-100 text-gray-700 text-center">10x</button>
+                                <button class="py-2 text-sm rounded-lg bg-gray-100 text-gray-700 text-center">20x</button>
+                                <button class="py-2 text-sm rounded-lg bg-gray-100 text-gray-700 text-center">50x</button>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="quantity" class="block text-sm text-gray-600 mb-1">数量</label>
+                            <input type="number" id="quantity" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all" placeholder="请输入数量">
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="takeProfit" class="block text-sm text-gray-600 mb-1">止盈</label>
+                                <input type="number" id="takeProfit" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all" placeholder="请输入止盈价">
+                            </div>
+                            <div>
+                                <label for="stopLoss" class="block text-sm text-gray-600 mb-1">止损</label>
+                                <input type="number" id="stopLoss" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all" placeholder="请输入止损价">
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <div class="flex justify-between mb-2">
+                                <span class="text-sm text-gray-600">可用资金</span>
+                                <span class="text-sm font-semibold">USDT 10,000.00</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-sm text-gray-600">所需保证金</span>
+                                <span class="text-sm font-semibold">USDT 0.00</span>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-4 gap-2 mb-4">
+                            <button class="py-2 text-sm rounded-lg bg-gray-100 text-gray-700 text-center">25%</button>
+                            <button class="py-2 text-sm rounded-lg bg-gray-100 text-gray-700 text-center">50%</button>
+                            <button class="py-2 text-sm rounded-lg bg-gray-100 text-gray-700 text-center">75%</button>
+                            <button class="py-2 text-sm rounded-lg bg-gray-100 text-gray-700 text-center">100%</button>
+                        </div>
+                        
+                        <button id="openLongBtn" class="w-full py-3 gradient-button text-white font-semibold rounded-lg shadow-md">
+                            开多
+                        </button>
+                        
+                        <button id="openShortBtn" class="w-full py-3 bg-danger text-white font-semibold rounded-lg shadow-md">
+                            开空
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 当前持仓 -->
+                <div>
+                    <h2 class="text-lg font-bold mb-4">当前持仓</h2>
+                    
+                    <div class="bg-white p-4 rounded-xl shadow-custom">
+                        <div class="flex justify-between items-center mb-4">
+                            <div>
+                                <h3 class="font-semibold">碳资产管理基金</h3>
+                                <p class="text-xs text-gray-500">多仓 | 100.50份 | 杠杆10x</p>
+                            </div>
+                            <button class="px-3 py-1 text-xs bg-danger text-white rounded-full">
+                                平仓
+                            </button>
+                        </div>
+                        
+                        <div class="grid grid-cols-3 gap-2 mb-4">
+                            <div>
+                                <p class="text-xs text-gray-500">持仓均价</p>
+                                <p class="font-semibold">¥105.20</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500">当前价格</p>
+                                <p class="font-semibold">¥118.35</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500">盈亏</p>
+                                <p class="font-semibold text-success">+¥1,322.58</p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <div class="flex justify-between mb-2">
+                                <span class="text-sm text-gray-600">保证金</span>
+                                <span class="text-sm font-semibold">USDT 1,057.11</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-sm text-gray-600">收益率</span>
+                                <span class="text-sm font-semibold text-success">+12.53%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 资产页面 -->
+            <section id="assetPage" class="space-y-6 hidden animate-on-load">
+                <!-- 资产概览 -->
+                <div class="bg-white p-4 rounded-xl shadow-custom animate-on-scroll">
+                    <h2 class="text-lg font-bold mb-4">资产概览</h2>
+                    
+                    <div class="flex justify-between items-end mb-6">
+                        <div>
+                            <p class="text-sm text-gray-500">总资产 (USDT)</p>
+                            <p class="text-2xl font-bold">10,000.00</p>
+                        </div>
+                        <div class="flex space-x-3">
+                            <button id="depositBtn" class="px-4 py-2 text-sm bg-primary/10 text-primary rounded-full button-hover">
+                                <i class="fa fa-plus-circle mr-1"></i> 充值
+                            </button>
+                            <button id="withdrawBtn" class="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-full button-hover">
+                                <i class="fa fa-minus-circle mr-1"></i> 提现
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-4 gap-3 mb-4">
+                        <div class="text-center">
+                            <p class="text-xs text-gray-500">可用资金</p>
+                            <p class="font-semibold">7,000.00</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-xs text-gray-500">已用保证金</p>
+                            <p class="font-semibold">2,000.00</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-xs text-gray-500">未实现盈亏</p>
+                            <p class="font-semibold text-success">+1,322.58</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-xs text-gray-500">今日盈亏</p>
+                            <p class="font-semibold text-success">+520.36</p>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <canvas id="assetChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- 持仓明细 -->
+                <div class="animate-on-scroll">
+                    <h2 class="text-lg font-bold mb-4">持仓明细</h2>
+                    
+                    <div class="bg-white p-4 rounded-xl shadow-custom">
+                        <div class="flex justify-between items-center mb-4">
+                            <div>
+                                <h3 class="font-semibold">碳资产管理基金</h3>
+                                <p class="text-xs text-gray-500">JCFUND003 | 多仓 | 10x杠杆</p>
+                            </div>
+                            <button class="px-3 py-1 text-xs bg-danger text-white rounded-full">
+                                平仓
+                            </button>
+                        </div>
+                        
+                        <div class="grid grid-cols-3 gap-2 mb-4">
+                            <div>
+                                <p class="text-xs text-gray-500">持仓数量</p>
+                                <p class="font-semibold">100.50份</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500">持仓均价</p>
+                                <p class="font-semibold">¥105.20</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500">当前价格</p>
+                                <p class="font-semibold">¥118.35</p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <div class="flex justify-between mb-2">
+                                <span class="text-sm text-gray-600">保证金</span>
+                                <span class="text-sm font-semibold">USDT 1,057.11</span>
+                            </div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-sm text-gray-600">浮动盈亏</span>
+                                <span class="text-sm font-semibold text-success">+¥1,322.58</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-sm text-gray-600">收益率</span>
+                                <span class="text-sm font-semibold text-success">+12.53%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 交易记录 -->
+                <div class="animate-on-scroll">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-bold">交易记录</h2>
+                        <div class="flex space-x-2">
+                            <button class="px-3 py-1 text-xs bg-primary text-white rounded-full">全部</button>
+                            <button class="px-3 py-1 text-xs bg-gray-200 text-gray-700 rounded-full">买入</button>
+                            <button class="px-3 py-1 text-xs bg-gray-200 text-gray-700 rounded-full">卖出</button>
+                            <button class="px-3 py-1 text-xs bg-gray-200 text-gray-700 rounded-full">充值</button>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <div class="bg-white p-4 rounded-xl shadow-custom">
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <h3 class="font-semibold">开多 - 碳资产管理基金</h3>
+                                    <p class="text-xs text-gray-500">JCFUND003</p>
+                                </div>
+                                <span class="text-xs px-2 py-1 bg-primary/10 text-primary rounded-full">成功</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-500">2025-09-18 14:30:25</span>
+                                <span class="font-semibold">100.50份 @ ¥105.20</span>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white p-4 rounded-xl shadow-custom">
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <h3 class="font-semibold">充值</h3>
+                                    <p class="text-xs text-gray-500">USDT</p>
+                                </div>
+                                <span class="text-xs px-2 py-1 bg-success/10 text-success rounded-full">成功</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-500">2025-09-18 10:15:36</span>
+                                <span class="font-semibold text-success">+USDT 5,000.00</span>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white p-4 rounded-xl shadow-custom">
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <h3 class="font-semibold">开多 - 清洁能源基金</h3>
+                                    <p class="text-xs text-gray-500">JCFUND001</p>
+                                </div>
+                                <span class="text-xs px-2 py-1 bg-primary/10 text-primary rounded-full">成功</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-500">2025-09-17 16:42:18</span>
+                                <span class="font-semibold">85.75份 @ ¥98.45</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 关于我们 -->
+            <div class="mt-8 mb-4 text-center text-xs text-gray-500">
+                <div class="flex justify-center space-x-4 mb-2">
+                    <button onclick="openAboutModal('about')" class="hover:text-primary transition-colors">公司介绍</button>
+                    <button onclick="openAboutModal('rules')" class="hover:text-primary transition-colors">平台规则</button>
+                    <button onclick="openAboutModal('disclaimer')" class="hover:text-primary transition-colors">免责声明</button>
+                    <button onclick="openAboutModal('strategy')" class="hover:text-primary transition-colors">交易策略</button>
+                </div>
+                <p>© 2025 武汉聚财众发私募基金管理有限公司 版权所有</p>
+            </div>
+        </main>
+        
+        <!-- 底部导航栏 -->
+        <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2 z-40">
+            <div class="grid grid-cols-4 gap-2 max-w-5xl mx-auto">
+                <button id="homeNavBtn" class="flex flex-col items-center justify-center py-2 text-primary nav-button">
+                    <i class="fa fa-home text-xl"></i>
+                    <span class="text-xs mt-1">首页</span>
+                </button>
+                <button id="marketNavBtn" class="flex flex-col items-center justify-center py-2 text-gray-500 nav-button">
+                    <i class="fa fa-line-chart text-xl"></i>
+                    <span class="text-xs mt-1">行情</span>
+                </button>
+                <button id="tradeNavBtn" class="flex flex-col items-center justify-center py-2 text-gray-500 nav-button">
+                    <i class="fa fa-exchange text-xl"></i>
+                    <span class="text-xs mt-1">交易</span>
+                </button>
+                <button id="assetNavBtn" class="flex flex-col items-center justify-center py-2 text-gray-500 nav-button">
+                    <i class="fa fa-credit-card text-xl"></i>
+                    <span class="text-xs mt-1">资产</span>
+                </button>
+            </div>
+        </nav>
+    </div>
+    
+    <!-- 新闻详情模态框 -->
+    <div id="newsModal" class="modal fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div class="modal-content bg-white rounded-xl shadow-xl w-full max-w-md max-h-[80vh] overflow-y-auto mx-4">
+            <div class="p-4 border-b border-gray-200">
+                <div class="flex justify-between items-center mb-2">
+                    <h3 id="newsTitle" class="font-bold text-lg">新闻标题</h3>
+                    <button onclick="closeModal('newsModal')" class="text-gray-500 hover:text-gray-700">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="newsContent" class="p-4">
+                <!-- 新闻内容将通过JavaScript动态填充 -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- 关于我们模态框 -->
+    <div id="aboutModal" class="modal fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div class="modal-content bg-white rounded-xl shadow-xl w-full max-w-md max-h-[80vh] overflow-y-auto mx-4">
+            <div class="p-4 border-b border-gray-200">
+                <div class="flex justify-between items-center mb-2">
+                    <h3 id="aboutTitle" class="font-bold text-lg">关于我们</h3>
+                    <button onclick="closeModal('aboutModal')" class="text-gray-500 hover:text-gray-700">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="aboutContent" class="p-4">
+                <!-- 内容将通过JavaScript动态填充 -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- 充值模态框 -->
+    <div id="depositModal" class="modal fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div class="modal-content bg-white rounded-xl shadow-xl w-full max-w-md mx-4">
+            <div class="p-4 border-b border-gray-200">
+                <div class="flex justify-between items-center mb-2">
+                    <h3 class="font-bold text-lg">充值</h3>
+                    <button onclick="closeModal('depositModal')" class="text-gray-500 hover:text-gray-700">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="p-4">
+                <div class="mb-4">
+                    <label class="block text-sm text-gray-600 mb-1">选择充值方式</label>
+                    <div class="grid grid-cols-3 gap-3">
+                        <div class="p-4 border rounded-lg border-primary flex flex-col items-center">
+                            <i class="fa fa-btc text-xl text-primary mb-1"></i>
+                            <p class="text-sm">USDT</p>
+                        </div>
+                        <div class="p-4 border rounded-lg border-gray-200 flex flex-col items-center">
+                            <i class="fa fa-credit-card text-xl text-gray-400 mb-1"></i>
+                            <p class="text-sm">银行卡</p>
+                        </div>
+                        <div class="p-4 border rounded-lg border-gray-200 flex flex-col items-center">
+                            <i class="fa fa-wechat text-xl text-gray-400 mb-1"></i>
+                            <p class="text-sm">微信</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-6">
+                    <label for="depositAmount" class="block text-sm text-gray-600 mb-1">充值金额 (USDT)</label>
+                    <input type="number" id="depositAmount" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all" placeholder="请输入充值金额">
+                </div>
+                
+                <button class="w-full py-3 gradient-primary text-white font-semibold rounded-lg shadow-md">
+                    确认充值
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- JavaScript -->
+    <script>
+        // 全局变量
+        let carouselInterval;
+        let currentSlide = 0;
+        let currentPage = 'home';
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+        
+        // 应用初始化
+        function initializeApp() {
+            // 初始化登录表单
+            initLoginForm();
+            
+            // 初始化轮播图
+            initCarousel();
+            
+            // 初始化底部导航
+            initNavigation();
+            
+            // 初始化基金行情图表
+            initFundCharts();
+            
+            // 初始化交易页面
+            initTradePage();
+            
+            // 初始化资产页面
+            initAssetPage();
+        }
+        
+        // 初始化登录表单
+        function initLoginForm() {
+            const loginForm = document.getElementById('loginForm');
+            
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                
+                // 模拟登录验证
+                if (username && password) {
+                    // 隐藏登录页面，显示主应用
+                    document.getElementById('loginPage').classList.add('hidden');
+                    document.getElementById('appContainer').classList.remove('hidden');
+                    
+                    // 显示欢迎提示
+                    showToast(`欢迎回来，${username}！`);
+                    
+                    // 初始化登录后的功能
+                    initLoggedInFeatures();
+                } else {
+                    showErrorToast('请输入用户名和密码');
+                }
+            });
+        }
+        
+        // 初始化登录后的功能
+        function initLoggedInFeatures() {
+            // 加载用户资产数据
+            loadUserAssets();
+            
+            // 加载交易记录
+            loadTransactionHistory();
+            
+            // 初始化充值提现按钮
+            initDepositWithdrawButtons();
+        }
+        
+        // 初始化轮播图
+        function initCarousel() {
+            const carousel = document.getElementById('carousel');
+            const slides = document.querySelectorAll('.carousel-slide');
+            const dots = document.querySelectorAll('.carousel-dot');
+            const slideCount = slides.length;
+            
+            // 设置轮播图宽度
+            carousel.style.width = `${slideCount * 100}%`;
+            
+            // 初始化轮播图导航
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    goToSlide(index);
+                });
+            });
+            
+            // 启动自动轮播
+            startCarouselInterval();
+        }
+        
+        // 启动轮播定时器
+        function startCarouselInterval() {
+            carouselInterval = setInterval(() => {
+                const slides = document.querySelectorAll('.carousel-slide');
+                currentSlide = (currentSlide + 1) % slides.length;
+                goToSlide(currentSlide);
+            }, 5000);
+        }
+        
+        // 切换到指定轮播图
+        function goToSlide(index) {
+            const carousel = document.getElementById('carousel');
+            const dots = document.querySelectorAll('.carousel-dot');
+            
+            currentSlide = index;
+            
+            // 更新轮播图位置
+            carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            // 更新导航点状态
+            dots.forEach((dot, i) => {
+                if (i === currentSlide) {
+                    dot.classList.add('opacity-100');
+                    dot.classList.remove('opacity-50');
+                } else {
+                    dot.classList.add('opacity-50');
+                    dot.classList.remove('opacity-100');
+                }
+            });
+        }
+        
+        // 初始化底部导航
+        function initNavigation() {
+            const homeBtn = document.getElementById('homeNavBtn');
+            const marketBtn = document.getElementById('marketNavBtn');
+            const tradeBtn = document.getElementById('tradeNavBtn');
+            const assetBtn = document.getElementById('assetNavBtn');
+            
+            const homePage = document.getElementById('homePage');
+            const marketPage = document.getElementById('marketPage');
+            const tradePage = document.getElementById('tradePage');
+            const assetPage = document.getElementById('assetPage');
+            
+            // 导航事件监听
+            homeBtn.addEventListener('click', function() {
+                if (currentPage !== 'home') {
+                    switchPage('home', homePage, homeBtn);
+                }
+            });
+            
+            marketBtn.addEventListener('click', function() {
+                if (currentPage !== 'market') {
+                    switchPage('market', marketPage, marketBtn);
+                    initMarketCharts();
+                }
+            });
+            
+            tradeBtn.addEventListener('click', function() {
+                if (currentPage !== 'trade') {
+                    switchPage('trade', tradePage, tradeBtn);
+                    initTradeChart();
+                }
+            });
+            
+            assetBtn.addEventListener('click', function() {
+                if (currentPage !== 'asset') {
+                    switchPage('asset', assetPage, assetBtn);
+                    initAssetChart();
+                }
+            });
+        }
+        
+        // 切换页面
+        function switchPage(pageName, pageElement, navButton) {
+            // 隐藏当前页面
+            const pages = ['homePage', 'marketPage', 'tradePage', 'assetPage'];
+            const navButtons = ['homeNavBtn', 'marketNavBtn', 'tradeNavBtn', 'assetNavBtn'];
+            
+            pages.forEach(page => {
+                document.getElementById(page).classList.add('hidden');
+            });
+            
+            navButtons.forEach(btn => {
+                document.getElementById(btn).classList.remove('text-primary');
+                document.getElementById(btn).classList.add('text-gray-500');
+            });
+            
+            // 显示目标页面
+            pageElement.classList.remove('hidden');
+            navButton.classList.remove('text-gray-500');
+            navButton.classList.add('text-primary');
+            
+            // 更新当前页面
+            currentPage = pageName;
+            
+            // 添加动画效果
+            pageElement.classList.add('slide-up-animation');
+            setTimeout(() => {
+                pageElement.classList.remove('slide-up-animation');
+            }, 500);
+        }
+        
+        // 初始化基金图表
+        function initFundCharts() {
+            // 为首页的四个基金卡片创建简单图表
+            const fundIds = ['fundChart1', 'fundChart2', 'fundChart3', 'fundChart4'];
+            
+            fundIds.forEach(id => {
+                const ctx = document.getElementById(id).getContext('2d');
+                
+                // 生成随机数据
+                const labels = Array.from({length: 12}, (_, i) => '');
+                const data = Array.from({length: 12}, () => Math.floor(Math.random() * 50) + 50);
+                
+                // 创建图表
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: '',
+                            data: data,
+                            borderColor: '#22c55e',
+                            backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 0,
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                enabled: false
+                            }
+                        },
+                        scales: {
+                            x: {
+                                display: false
+                            },
+                            y: {
+                                display: false
+                            }
+                        },
+                        elements: {
+                            line: {
+                                borderWidth: 2
+                            }
+                        }
+                    }
+                });
+            });
+        }
+        
+        // 初始化市场页面图表
+        function initMarketCharts() {
+            const ctx = document.getElementById('marketChart').getContext('2d');
+            
+            // 生成模拟数据
+            const labels = Array.from({length: 24}, (_, i) => `${i}:00`);
+            const data = Array.from({length: 24}, (_, i) => 110 + Math.sin(i * 0.5) * 10 + Math.random() * 5);
+            
+            // 创建图表
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: '价格',
+                        data: data,
+                        borderColor: '#22c55e',
+                        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 0,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                maxRotation: 0,
+                                autoSkip: true,
+                                maxTicksLimit: 8
+                            }
+                        },
+                        y: {
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // 初始化交易页面图表
+        function initTradeChart() {
+            const ctx = document.getElementById('tradeChart').getContext('2d');
+            
+            // 生成模拟数据
+            const labels = Array.from({length: 24}, (_, i) => `${i}:00`);
+            const data = Array.from({length: 24}, (_, i) => 115 + Math.sin(i * 0.3) * 8 + Math.random() * 4);
+            
+            // 创建图表
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: '价格',
+                        data: data,
+                        borderColor: '#22c55e',
+                        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 0,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                maxRotation: 0,
+                                autoSkip: true,
+                                maxTicksLimit: 8
+                            }
+                        },
+                        y: {
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // 初始化资产页面图表
+        function initAssetChart() {
+            const ctx = document.getElementById('assetChart').getContext('2d');
+            
+            // 资产分布数据
+            const data = {
+                labels: ['碳资产管理基金', '清洁能源基金', '环保科技基金', '绿色交通基金', '其他'],
+                datasets: [{
+                    data: [35, 25, 20, 15, 5],
+                    backgroundColor: ['#22c55e', '#10b981', '#059669', '#047857', '#065f46'],
+                    borderWidth: 0
+                }]
+            };
+            
+            // 创建图表
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                boxWidth: 12,
+                                padding: 15
+                            }
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        }
+        
+        // 初始化交易页面
+        function initTradePage() {
+            // 交易模式切换
+            const modeBtns = document.querySelectorAll('#tradePage .rounded-xl.shadow-custom button:first-child, #tradePage .rounded-xl.shadow-custom button:nth-child(2), #tradePage .rounded-xl.shadow-custom button:nth-child(3)');
+            modeBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 移除所有按钮的激活状态
+                    modeBtns.forEach(b => {
+                        b.classList.remove('bg-primary', 'text-white');
+                        b.classList.add('bg-gray-100', 'text-gray-700');
+                    });
+                    
+                    // 添加当前按钮的激活状态
+                    this.classList.remove('bg-gray-100', 'text-gray-700');
+                    this.classList.add('bg-primary', 'text-white');
+                });
+            });
+            
+            // 保证金模式切换
+            const marginModeBtns = document.querySelectorAll('#tradePage .space-y-4 button:first-child, #tradePage .space-y-4 button:nth-child(2)');
+            marginModeBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 移除所有按钮的激活状态
+                    marginModeBtns.forEach(b => {
+                        b.classList.remove('bg-primary', 'text-white');
+                        b.classList.add('bg-gray-100', 'text-gray-700');
+                    });
+                    
+                    // 添加当前按钮的激活状态
+                    this.classList.remove('bg-gray-100', 'text-gray-700');
+                    this.classList.add('bg-primary', 'text-white');
+                });
+            });
+            
+            // 杠杆倍数切换
+            const leverageBtns = document.querySelectorAll('#tradePage .grid.grid-cols-5 button');
+            leverageBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 移除所有按钮的激活状态
+                    leverageBtns.forEach(b => {
+                        b.classList.remove('bg-primary', 'text-white');
+                        b.classList.add('bg-gray-100', 'text-gray-700');
+                    });
+                    
+                    // 添加当前按钮的激活状态
+                    this.classList.remove('bg-gray-100', 'text-gray-700');
+                    this.classList.add('bg-primary', 'text-white');
+                });
+            });
+            
+            // 开多/开空按钮
+            initTradeButtons();
+        }
+        
+        // 初始化交易按钮
+        function initTradeButtons() {
+            const openLongBtn = document.getElementById('openLongBtn');
+            const openShortBtn = document.getElementById('openShortBtn');
+            const quantityInput = document.getElementById('quantity');
+            
+            // 添加数量输入验证
+            quantityInput.addEventListener('input', function() {
+                // 只允许输入数字和小数点
+                this.value = this.value.replace(/[^\d.]/g, '');
+                // 确保只有一个小数点
+                const parts = this.value.split('.');
+                if (parts.length > 2) {
+                    this.value = parts[0] + '.' + parts.slice(1).join('');
+                }
+                // 限制小数点后最多6位
+                if (parts.length === 2 && parts[1].length > 6) {
+                    this.value = parts[0] + '.' + parts[1].slice(0, 6);
+                }
+            });
+            
+            openLongBtn.addEventListener('click', function() {
+                const quantity = quantityInput.value;
+                
+                if (!quantity || isNaN(quantity) || parseFloat(quantity) <= 0) {
+                    showErrorToast('请输入有效的交易数量');
+                    quantityInput.classList.add('border-danger');
+                    setTimeout(() => {
+                        quantityInput.classList.remove('border-danger');
+                    }, 2000);
+                    return;
+                }
+                
+                showLoading();
+                
+                // 模拟交易请求
+                setTimeout(() => {
+                    showSuccessToast('开多交易成功！');
+                    // 重置输入框
+                    quantityInput.value = '';
+                    // 刷新资产数据
+                    loadUserAssets();
+                    hideLoading();
+                }, 1500);
+            });
+            
+            openShortBtn.addEventListener('click', function() {
+                const quantity = quantityInput.value;
+                
+                if (!quantity || isNaN(quantity) || parseFloat(quantity) <= 0) {
+                    showErrorToast('请输入有效的交易数量');
+                    quantityInput.classList.add('border-danger');
+                    setTimeout(() => {
+                        quantityInput.classList.remove('border-danger');
+                    }, 2000);
+                    return;
+                }
+                
+                showLoading();
+                
+                // 模拟交易请求
+                setTimeout(() => {
+                    showSuccessToast('开空交易成功！');
+                    // 重置输入框
+                    quantityInput.value = '';
+                    // 刷新资产数据
+                    loadUserAssets();
+                    hideLoading();
+                }, 1500);
+            });
+        }
+        
+        // 初始化资产页面
+        function initAssetPage() {
+            // 交易记录筛选
+            const filterBtns = document.querySelectorAll('#assetPage .flex.justify-between button');
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 移除所有按钮的激活状态
+                    filterBtns.forEach(b => {
+                        b.classList.remove('bg-primary', 'text-white');
+                        b.classList.add('bg-gray-200', 'text-gray-700');
+                    });
+                    
+                    // 添加当前按钮的激活状态
+                    this.classList.remove('bg-gray-200', 'text-gray-700');
+                    this.classList.add('bg-primary', 'text-white');
+                    
+                    // 筛选时显示加载状态
+                    showLoading();
+                    setTimeout(() => {
+                        loadTransactionHistory();
+                        hideLoading();
+                    }, 500);
+                });
+            });
+        }
+        
+        // 加载用户资产数据
+        function loadUserAssets() {
+            showLoading();
+            
+            // 模拟API请求
+            setTimeout(() => {
+                // 这里应该是从API获取数据后更新页面
+                // 由于是模拟，这里不做实际的数据更新
+                console.log('加载用户资产数据');
+                hideLoading();
+            }, 800);
+        }
+        
+        // 加载交易记录
+        function loadTransactionHistory() {
+            showLoading();
+            
+            // 模拟API请求
+            setTimeout(() => {
+                // 这里应该是从API获取数据后更新页面
+                // 由于是模拟，这里不做实际的数据更新
+                console.log('加载交易记录');
+                hideLoading();
+            }, 800);
+        }
+        
+        // 初始化充值提现按钮
+        function initDepositWithdrawButtons() {
+            const depositBtn = document.getElementById('depositBtn');
+            const withdrawBtn = document.getElementById('withdrawBtn');
+            const depositModal = document.getElementById('depositModal');
+            
+            depositBtn.addEventListener('click', function() {
+                openModal('depositModal');
+            });
+            
+            withdrawBtn.addEventListener('click', function() {
+                showInfoToast('提现功能暂未开放');
+            });
+        }
+        
+        // 通知系统优化
+        // 显示提示消息
+        function showToast(message, type = 'success') {
+            // 创建提示元素
+            const toast = document.createElement('div');
+            const bgColor = type === 'success' ? 'bg-success' : type === 'error' ? 'bg-danger' : type === 'warning' ? 'bg-warning text-gray-800' : 'bg-info text-white';
+            const iconClass = type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle';
+            
+            toast.className = `fixed top-20 left-1/2 transform -translate-x-1/2 ${bgColor} px-4 py-3 rounded-lg shadow-lg z-50 transition-all duration-500 ease-out flex items-center gap-2`;
+            toast.innerHTML = `
+                <i class="fa ${iconClass}"></i>
+                <span>${message}</span>
+            `;
+            
+            // 添加到页面
+            document.body.appendChild(toast);
+            
+            // 入场动画
+            setTimeout(() => {
+                toast.style.transform = 'translate(-50%, -10px)';
+                toast.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)';
+            }, 10);
+            
+            // 退场动画
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translate(-50%, -30px)';
+                toast.style.boxShadow = 'none';
+                
+                // 移除元素
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 500);
+            }, 4000);
+        }
+        
+        // 显示成功提示
+        function showSuccessToast(message) {
+            showToast(message, 'success');
+        }
+        
+        // 显示错误提示
+        function showErrorToast(message) {
+            showToast(message, 'error');
+        }
+        
+        // 显示警告提示
+        function showWarningToast(message) {
+            showToast(message, 'warning');
+        }
+        
+        // 显示信息提示
+        function showInfoToast(message) {
+            showToast(message, 'info');
+        }
+        
+        // 打开模态框
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.add('active');
+            
+            // 防止背景滚动
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // 关闭模态框
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('active');
+            
+            // 恢复背景滚动
+            document.body.style.overflow = '';
+        }
+        
+        // 打开关于我们模态框
+        function openAboutModal(type) {
+            const modal = document.getElementById('aboutModal');
+            const title = document.getElementById('aboutTitle');
+            const content = document.getElementById('aboutContent');
+            
+            // 设置标题和内容
+            switch(type) {
+                case 'about':
+                    title.textContent = '公司介绍';
+                    content.innerHTML = `
+                        <div class="space-y-4">
+                            <p>武汉聚财众发私募基金管理有限公司成立于2018年，是一家专注于绿色金融和可持续投资的专业基金管理公司。</p>
+                            <p>公司依托深厚的行业背景和专业的投资团队，致力于为投资者提供高质量的绿色金融产品和服务，助力实现"双碳"目标。</p>
+                            <p>我们的使命是通过金融创新推动环境保护和可持续发展，为投资者创造长期价值的同时，为社会创造积极的环境和社会效益。</p>
+                            <div class="mt-6">
+                                <h4 class="font-semibold mb-2">联系我们</h4>
+                                <p class="text-sm text-gray-600 mb-1"><i class="fa fa-map-marker mr-2"></i> 地址：武汉市江汉区解放大道1234号</p>
+                                <p class="text-sm text-gray-600 mb-1"><i class="fa fa-phone mr-2"></i> 电话：400-123-4567</p>
+                                <p class="text-sm text-gray-600"><i class="fa fa-envelope mr-2"></i> 邮箱：contact@jucai-fund.com</p>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 'rules':
+                    title.textContent = '平台规则';
+                    content.innerHTML = `
+                        <div class="space-y-4 text-sm">
+                            <h4 class="font-semibold">1. 交易规则</h4>
+                            <p>平台支持碳资产管理基金的合约交易，包括开多、开空等交易方式。交易时间为每日9:00-18:00，节假日除外。</p>
+                            
+                            <h4 class="font-semibold">2. 高频交易限制</h4>
+                            <p>为维护市场稳定，平台对高频交易行为进行限制，同一账户在短时间内频繁交易可能会触发风控机制。</p>
+                            
+                            <h4 class="font-semibold">3. 风险提示</h4>
+                            <p>投资有风险，入市需谨慎。碳资产管理基金属于高风险投资品种，投资者应根据自身风险承受能力谨慎投资。</p>
+                            
+                            <h4 class="font-semibold">4. 私募基金规则</h4>
+                            <p>本平台提供的部分基金产品属于私募基金，仅面向合格投资者开放。合格投资者需满足金融资产不低于300万元或者最近三年个人年均收入不低于50万元的条件。</p>
+                            
+                            <h4 class="font-semibold">5. 数字货币合约规则</h4>
+                            <p>平台提供的数字货币合约交易具有高杠杆、高风险特性，投资者应充分了解相关风险，谨慎参与。</p>
+                            
+                            <h4 class="font-semibold">6. 绿色基金特别规则</h4>
+                            <p>绿色基金投资于环保、清洁能源等领域，其表现可能受到政策、技术等因素的影响，投资者应关注相关行业动态。</p>
+                        </div>
+                    `;
+                    break;
+                case 'disclaimer':
+                    title.textContent = '免责声明';
+                    content.innerHTML = `
+                        <div class="space-y-3 text-sm">
+                            <p>1. 本平台提供的所有信息仅供参考，不构成任何投资建议。投资者应根据自身情况做出投资决策，并自行承担投资风险。</p>
+                            <p>2. 本平台不对任何投资行为的收益做出承诺或保证。投资有风险，入市需谨慎。</p>
+                            <p>3. 由于市场波动、政策变化等因素，过往业绩不代表未来表现。</p>
+                            <p>4. 本平台努力确保信息的准确性和及时性，但不保证信息的完整性和可靠性。</p>
+                            <p>5. 投资者应严格遵守国家法律法规，不得利用本平台进行任何违法违规活动。</p>
+                            <p>6. 如因不可抗力、系统故障等原因导致交易中断或数据错误，本平台不承担任何责任。</p>
+                            <p>7. 本平台保留随时修改、暂停或终止部分或全部服务的权利，无需事先通知用户。</p>
+                            <p>8. 用户在使用本平台服务前，应仔细阅读并理解本免责声明及相关规则。</p>
+                        </div>
+                    `;
+                    break;
+                case 'strategy':
+                    title.textContent = '交易策略';
+                    content.innerHTML = `
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-semibold mb-2">分散投资策略</h4>
+                                <p class="text-sm text-gray-700">不要将所有资金集中投资于单一基金产品，应根据自身风险承受能力和投资目标，合理配置资金。</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-2">定期定额策略</h4>
+                                <p class="text-sm text-gray-700">通过定期定额投资方式，可以有效降低市场波动带来的风险，长期持有获取稳健收益。</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-2">止盈止损策略</h4>
+                                <p class="text-sm text-gray-700">设定合理的止盈止损点，当投资达到预期收益或亏损达到一定比例时，及时平仓以锁定收益或控制风险。</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-2">关注政策动向</h4>
+                                <p class="text-sm text-gray-700">绿色金融和碳交易市场受政策影响较大，投资者应密切关注国家相关政策变化，及时调整投资策略。</p>
+                            </div>
+                            <div class="mt-4 text-xs text-gray-500">
+                                <p>以上交易策略仅供参考，不构成投资建议。投资者应根据自身情况制定适合自己的投资策略。</p>
+                            </div>
+                        </div>
+                    `;
+                    break;
+            }
+            
+            // 打开模态框
+            openModal('aboutModal');
+        }
+        
+        // 点击模态框背景关闭模态框
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeModal(this.id);
+                }
+            });
+        });
+        
+        // 监听键盘事件
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                // 关闭所有打开的模态框
+                document.querySelectorAll('.modal.active').forEach(modal => {
+                    closeModal(modal.id);
+                });
+            }
+        });
+        
+        // 监听页面可见性变化
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                // 页面隐藏时停止轮播
+                clearInterval(carouselInterval);
+            } else {
+                // 页面显示时重新开始轮播
+                startCarouselInterval();
+            }
+        });
+        
+        // 增强的滚动效果
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('nav');
+            // 导航栏滚动效果
+            if (window.scrollY > 10) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+            
+            // 滚动时为元素添加动画
+            const animatedElements = document.querySelectorAll('.animate-on-scroll');
+            animatedElements.forEach(element => {
+                if (isElementInViewport(element) && !element.classList.contains('animated')) {
+                    element.classList.add('animated');
+                }
+            });
+        });
+        
+        // 初始化通知和用户按钮
+        // 通知系统管理
+        let notifications = [
+            {
+                id: 1,
+                type: 'trade',
+                title: '交易提醒',
+                content: '您的碳资产管理基金已达到止盈线，建议及时平仓。',
+                time: '10分钟前',
+                read: false
+            },
+            {
+                id: 2,
+                type: 'system',
+                title: '系统通知',
+                content: '平台将于明日凌晨2:00-4:00进行系统维护，请提前做好准备。',
+                time: '2小时前',
+                read: false
+            },
+            {
+                id: 3,
+                type: 'policy',
+                title: '政策更新',
+                content: '国家发改委发布《关于加快建立健全绿色低碳循环发展经济体系的指导意见》，对绿色金融市场将产生积极影响。',
+                time: '昨天',
+                read: true
+            }
+        ];
+        
+        // 更新未读通知数量
+        function updateUnreadCount() {
+            const unreadCount = notifications.filter(notification => !notification.read).length;
+            const notificationBtn = document.getElementById('notificationBtn');
+            
+            if (notificationBtn) {
+                // 移除现有的未读标记
+                const existingBadge = notificationBtn.querySelector('.notification-badge');
+                if (existingBadge) {
+                    existingBadge.remove();
+                }
+                
+                // 添加新的未读标记
+                if (unreadCount > 0) {
+                    const badge = document.createElement('span');
+                    badge.className = 'notification-badge absolute -top-1 -right-1 w-5 h-5 bg-danger text-white text-xs rounded-full flex items-center justify-center';
+                    badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+                    notificationBtn.appendChild(badge);
+                }
+            }
+        }
+        
+        // 标记通知为已读
+        function markNotificationAsRead(notificationId) {
+            const notification = notifications.find(n => n.id === notificationId);
+            if (notification && !notification.read) {
+                notification.read = true;
+                updateUnreadCount();
+                // 重新渲染通知列表
+                renderNotificationList();
+            }
+        }
+        
+        // 渲染通知列表
+        function renderNotificationList(filterType = 'all') {
+            const notificationList = document.getElementById('notificationList');
+            if (!notificationList) return;
+            
+            // 清空列表
+            notificationList.innerHTML = '';
+            
+            // 过滤通知
+            let filteredNotifications = notifications;
+            if (filterType !== 'all') {
+                filteredNotifications = notifications.filter(n => n.type === filterType);
+            }
+            
+            // 添加无通知状态
+            if (filteredNotifications.length === 0) {
+                const emptyState = document.createElement('div');
+                emptyState.className = 'py-10 text-center text-gray-500';
+                emptyState.innerHTML = `
+                    <i class="fa fa-bell-slash text-3xl mb-2"></i>
+                    <p>暂无${filterType === 'all' ? '' : getTypeName(filterType)}通知</p>
+                `;
+                notificationList.appendChild(emptyState);
+                return;
+            }
+            
+            // 渲染通知项
+            filteredNotifications.forEach(notification => {
+                const notificationItem = document.createElement('div');
+                const typeColor = notification.type === 'trade' ? 'bg-success/10 text-success' : 
+                                  notification.type === 'system' ? 'bg-info/10 text-info' : 
+                                  notification.type === 'policy' ? 'bg-warning/10 text-warning' : 
+                                  'bg-gray-100 text-gray-700';
+                
+                notificationItem.className = `p-3 border ${notification.read ? 'border-gray-100' : 'border-primary/20 bg-primary/5'} rounded-lg hover:bg-gray-50 transition-all duration-300 transform hover:-translate-y-1`;
+                notificationItem.innerHTML = `
+                    <div class="flex justify-between items-start mb-1">
+                        <div class="flex items-center gap-2">
+                            <span class="px-2 py-0.5 text-xs rounded-full ${typeColor}">${notification.title}</span>
+                            ${!notification.read ? '<span class="w-2 h-2 bg-primary rounded-full"></span>' : ''}
+                        </div>
+                        <span class="text-xs text-gray-500">${notification.time}</span>
+                    </div>
+                    <p class="text-sm text-gray-700">${notification.content}</p>
+                `;
+                
+                // 添加点击事件
+                notificationItem.addEventListener('click', function() {
+                    markNotificationAsRead(notification.id);
+                });
+                
+                notificationList.appendChild(notificationItem);
+            });
+        }
+        
+        // 获取通知类型名称
+        function getTypeName(type) {
+            const typeMap = {
+                'trade': '交易',
+                'system': '系统',
+                'policy': '政策'
+            };
+            return typeMap[type] || type;
+        }
+        
+        // 通知模态框
+        const notificationModal = document.createElement('div');
+        notificationModal.id = 'notificationModal';
+        notificationModal.className = 'modal fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center backdrop-blur-sm';
+        notificationModal.innerHTML = `
+            <div class="bg-white rounded-xl p-5 w-full max-w-md transform transition-all duration-300 scale-95 opacity-0" id="notificationModalContent">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold">通知中心</h3>
+                    <div class="flex gap-2">
+                        <button id="markAllAsReadBtn" class="text-xs text-primary hover:text-primary/80">全部已读</button>
+                        <button onclick="closeModal('notificationModal')" class="text-gray-500 hover:text-gray-700 p-1 rounded-full hover:bg-gray-100">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 通知筛选 -->
+                <div class="flex mb-4 border-b overflow-x-auto scrollbar-hide">
+                    <button class="notification-filter-btn px-3 py-1 text-sm font-medium text-primary border-b-2 border-primary mr-2 whitespace-nowrap" data-type="all">全部</button>
+                    <button class="notification-filter-btn px-3 py-1 text-sm font-medium text-gray-500 hover:text-gray-700 mr-2 whitespace-nowrap" data-type="trade">交易提醒</button>
+                    <button class="notification-filter-btn px-3 py-1 text-sm font-medium text-gray-500 hover:text-gray-700 mr-2 whitespace-nowrap" data-type="system">系统通知</button>
+                    <button class="notification-filter-btn px-3 py-1 text-sm font-medium text-gray-500 hover:text-gray-700 mr-2 whitespace-nowrap" data-type="policy">政策更新</button>
+                </div>
+                
+                <div id="notificationList" class="max-h-80 overflow-y-auto space-y-3 mb-4 pr-1">
+                    <!-- 通知列表将由JavaScript动态生成 -->
+                </div>
+                <button onclick="closeModal('notificationModal')" class="w-full py-2 text-center text-sm text-gray-600 hover:text-gray-800">
+                    关闭
+                </button>
+            </div>
+        `;
+        document.body.appendChild(notificationModal);
+        
+        // 模态框显示动画
+        notificationModal.addEventListener('show', function() {
+            setTimeout(() => {
+                const content = document.getElementById('notificationModalContent');
+                if (content) {
+                    content.classList.remove('scale-95', 'opacity-0');
+                    content.classList.add('scale-100', 'opacity-100');
+                }
+            }, 10);
+            
+            // 渲染通知列表
+            renderNotificationList();
+        });
+        
+        // 模态框隐藏动画
+        notificationModal.addEventListener('hide', function() {
+            const content = document.getElementById('notificationModalContent');
+            if (content) {
+                content.classList.remove('scale-100', 'opacity-100');
+                content.classList.add('scale-95', 'opacity-0');
+            }
+        });
+        
+        // 通知筛选按钮事件
+        setTimeout(() => {
+            const filterBtns = document.querySelectorAll('.notification-filter-btn');
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 移除所有按钮的激活状态
+                    filterBtns.forEach(b => {
+                        b.classList.remove('text-primary', 'border-b-2', 'border-primary');
+                        b.classList.add('text-gray-500');
+                    });
+                    
+                    // 添加当前按钮的激活状态
+                    this.classList.remove('text-gray-500');
+                    this.classList.add('text-primary', 'border-b-2', 'border-primary');
+                    
+                    // 过滤通知
+                    const type = this.getAttribute('data-type');
+                    renderNotificationList(type);
+                });
+            });
+            
+            // 全部已读按钮事件
+            const markAllAsReadBtn = document.getElementById('markAllAsReadBtn');
+            if (markAllAsReadBtn) {
+                markAllAsReadBtn.addEventListener('click', function() {
+                    notifications.forEach(notification => {
+                        notification.read = true;
+                    });
+                    updateUnreadCount();
+                    renderNotificationList();
+                    showSuccessToast('已将全部通知标记为已读');
+                });
+            }
+        }, 100);
+        
+        // 初始化未读通知数量
+        updateUnreadCount();
+
+        // 个人中心模态框
+        const profileModal = document.createElement('div');
+        profileModal.id = 'profileModal';
+        profileModal.className = 'modal fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center';
+        profileModal.innerHTML = `
+            <div class="bg-white rounded-xl p-5 w-full max-w-lg">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-bold">个人中心</h3>
+                    <button onclick="closeModal('profileModal')" class="text-gray-500 hover:text-gray-700">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="flex flex-col items-center mb-6">
+                    <div class="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center mb-3">
+                        <i class="fa fa-user text-3xl text-gray-500"></i>
+                    </div>
+                    <h4 class="text-lg font-semibold">张小明</h4>
+                    <p class="text-sm text-gray-500">jucai_2023@example.com</p>
+                </div>
+                
+                <div class="space-y-3 mb-6">
+                    <div class="p-3 border border-gray-100 rounded-lg">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">手机号码</span>
+                            <span>138****6789</span>
+                        </div>
+                    </div>
+                    <div class="p-3 border border-gray-100 rounded-lg">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">实名认证</span>
+                            <span class="text-success">已认证</span>
+                        </div>
+                    </div>
+                    <div class="p-3 border border-gray-100 rounded-lg">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">会员等级</span>
+                            <span>黄金会员</span>
+                        </div>
+                    </div>
+                    <div class="p-3 border border-gray-100 rounded-lg">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">注册时间</span>
+                            <span>2023-06-15</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <button class="py-3 text-center bg-primary text-white rounded-lg">
+                        修改资料
+                    </button>
+                    <button class="py-3 text-center border border-gray-300 text-gray-700 rounded-lg">
+                        账户安全
+                    </button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(profileModal);
+
+        // 提现模态框
+        const withdrawModal = document.createElement('div');
+        withdrawModal.id = 'withdrawModal';
+        withdrawModal.className = 'modal fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center';
+        withdrawModal.innerHTML = `
+            <div class="bg-white rounded-xl p-5 w-full max-w-md">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold">提现</h3>
+                    <button onclick="closeModal('withdrawModal')" class="text-gray-500 hover:text-gray-700">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="mb-4">
+                    <p class="text-sm text-gray-500 mb-1">可用余额 (USDT)</p>
+                    <p class="text-xl font-bold">7,000.00</p>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">提现金额</label>
+                    <input type="number" placeholder="请输入提现金额" min="100" max="7000" step="100" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none">
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">提现方式</label>
+                    <select class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none">
+                        <option value="bank">银行卡提现</option>
+                        <option value="alipay">支付宝</option>
+                        <option value="wechat">微信支付</option>
+                    </select>
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">提现账户</label>
+                    <input type="text" placeholder="请输入提现账户" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none">
+                </div>
+                
+                <button class="w-full py-3 bg-primary text-white rounded-lg font-medium">
+                    确认提现
+                </button>
+            </div>
+        `;
+        document.body.appendChild(withdrawModal);
+
+        // 更新按钮事件
+        // 增强的按钮交互
+        document.getElementById('notificationBtn').addEventListener('click', function() {
+            this.classList.add('scale-95');
+            setTimeout(() => {
+                this.classList.remove('scale-95');
+                openModal('notificationModal');
+            }, 150);
+        });
+        
+        document.getElementById('userBtn').addEventListener('click', function() {
+            this.classList.add('scale-95');
+            setTimeout(() => {
+                this.classList.remove('scale-95');
+                openModal('profileModal');
+            }, 150);
+        });
+        
+        document.getElementById('withdrawBtn').addEventListener('click', function() {
+            this.classList.add('scale-95');
+            setTimeout(() => {
+                this.classList.remove('scale-95');
+                openModal('withdrawModal');
+            }, 150);
+        });
+        
+        // 底部导航栏交互
+        const navButtons = document.querySelectorAll('nav.fixed button');
+        navButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // 添加点击动画
+                this.classList.add('scale-95');
+                setTimeout(() => {
+                    this.classList.remove('scale-95');
+                }, 150);
+                
+                // 高亮当前导航
+                navButtons.forEach(btn => {
+                    btn.classList.remove('text-primary');
+                    btn.classList.add('text-gray-500');
+                });
+                this.classList.remove('text-gray-500');
+                this.classList.add('text-primary');
+                
+                // 滚动到对应区域
+                const targetId = this.id.replace('NavBtn', 'Page');
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 70,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // 增强的社交分享功能
+        const addShareButtons = function() {
+            const fundCards = document.querySelectorAll('.card-hover');
+            fundCards.forEach(card => {
+                // 添加卡片悬停效果
+                card.classList.add('transition-all', 'duration-300', 'hover:shadow-lg', 'hover:translate-y-[-4px]');
+                
+                if (!card.querySelector('.share-btn')) {
+                    const shareBtn = document.createElement('button');
+                    shareBtn.className = 'share-btn absolute top-2 right-2 p-2 bg-white/80 rounded-full shadow-sm hover:bg-white transition-all duration-300 hover:scale-110 hover:shadow-md';
+                    shareBtn.innerHTML = '<i class="fa fa-share-alt text-gray-600"></i>';
+                    shareBtn.onclick = function(e) {
+                        e.stopPropagation();
+                        this.classList.add('scale-125');
+                        setTimeout(() => {
+                            this.classList.remove('scale-125');
+                            showToast('分享功能已触发');
+                        }, 200);
+                    };
+                    card.style.position = 'relative';
+                    card.appendChild(shareBtn);
+                }
+            });
+        };
+        
+        // 页面加载完成后添加分享按钮
+        setTimeout(addShareButtons, 1000);
+        
+        // 加载状态控制功能
+        function showLoading() {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            if (loadingOverlay) {
+                loadingOverlay.classList.add('active');
+            }
+        }
+        
+        function hideLoading() {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            if (loadingOverlay) {
+                loadingOverlay.classList.remove('active');
+            }
+        }
+        
+        // 页面加载时显示加载指示器
+        window.addEventListener('load', function() {
+            // 延迟隐藏，让用户看到加载动画
+            setTimeout(hideLoading, 800);
+        });
+        
+        // 增强API请求函数，添加加载状态
+        function apiRequest(url, options = {}) {
+            showLoading();
+            
+            return fetch(url, options)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('网络请求失败');
+                    }
+                    return response.json();
+                })
+                .catch(error => {
+                    console.error('API请求错误:', error);
+                    showErrorToast('操作失败，请稍后重试');
+                    throw error;
+                })
+                .finally(() => {
+                    hideLoading();
+                });
+        }
+        
+        // 为图表添加交互效果
+        function enhanceChartInteraction() {
+            const chartContainers = document.querySelectorAll('.chart-container');
+            chartContainers.forEach(container => {
+                container.style.transition = 'all 0.3s ease-out';
+                container.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                    this.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)';
+                });
+                container.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '';
+                });
+            });
+        }
+        
+        // 优化按钮交互
+        function enhanceButtonInteraction() {
+            const primaryButtons = document.querySelectorAll('.gradient-button, .bg-primary');
+            primaryButtons.forEach(button => {
+                button.classList.add('btn-primary');
+                // 添加微动画效果
+                button.classList.add('transition-all', 'duration-300', 'hover:shadow-md', 'hover:scale-[1.02]', 'active:scale-[0.98]');
+            });
+            
+            // 为交易按钮添加特殊动画
+            const tradeButtons = document.querySelectorAll('#openLongBtn, #openShortBtn');
+            tradeButtons.forEach(button => {
+                button.classList.add('transition-all', 'duration-300', 'hover:shadow-lg', 'hover:translate-y-[-2px]');
+            });
+        }
+        
+        // 增强的价格变化动画
+        function animatePriceChanges() {
+            const priceElements = document.querySelectorAll('.text-success, .text-danger');
+            priceElements.forEach(element => {
+                // 仅对可见的元素进行动画
+                if (isElementInViewport(element)) {
+                    // 添加价格跳动动画
+                    if (!element.classList.contains('price-animated')) {
+                        element.classList.add('price-animated');
+                        element.style.transition = 'all 0.3s ease-out';
+                        
+                        // 添加微妙的缩放效果
+                        element.style.transform = 'scale(1.05)';
+                        setTimeout(() => {
+                            element.style.transform = 'scale(1)';
+                        }, 300);
+                        
+                        // 5秒后可以再次动画
+                        setTimeout(() => {
+                            element.classList.remove('price-animated');
+                        }, 5000);
+                    }
+                }
+            });
+        }
+        
+        // 检查元素是否在视口中
+        function isElementInViewport(el) {
+            const rect = el.getBoundingClientRect();
+            return (
+                rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+            );
+        }
+        
+        // 页面初始化完成后执行增强功能
+        setTimeout(() => {
+            enhanceChartInteraction();
+            enhanceButtonInteraction();
+            
+            // 为页面添加入场动画
+            document.querySelectorAll('.animate-on-load').forEach((element, index) => {
+                setTimeout(() => {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+            
+            // 定期执行价格动画
+            setInterval(animatePriceChanges, 5000);
+        }, 1500);
+        
+        // 优化交易数量输入框交互
+        const quantityInput = document.getElementById('quantity');
+        if (quantityInput) {
+            quantityInput.addEventListener('focus', function() {
+                this.classList.add('border-primary', 'ring-2', 'ring-primary/20');
+            });
+            quantityInput.addEventListener('blur', function() {
+                this.classList.remove('border-primary', 'ring-2', 'ring-primary/20');
+            });
+        }
+    </script>
+</body>
+</html>
